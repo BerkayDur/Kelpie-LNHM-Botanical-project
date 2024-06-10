@@ -1,0 +1,14 @@
+# data files/directories
+*.csv
+*.parquet
+data
+
+# misc
+.venv
+.env
+
+.terraform
+.tfvars
+
+__pycache__
+.pytest_cache
