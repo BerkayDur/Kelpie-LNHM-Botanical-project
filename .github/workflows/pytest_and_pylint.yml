@@ -46,7 +46,8 @@ jobs:
         run: |
           :> .util/pylint_scores.txt
           for FILE in $( find . -type d \( -path ./.util -o -path ./.venv \) -prune -false -o \( -name '*.py' ! -name 'test*.py' \) ); do
-            pylint $FILE
+            echo $FILE
+            pylint $FILE >> .util/pylint_scores.txt
           done
 
       # Convert Pylint scores to JSON

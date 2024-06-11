@@ -1,0 +1,14 @@
+************* Module one_more
+testing_dir/one_more.py:3:0: C0116: Missing function or method docstring (missing-function-docstring)
+
+------------------------------------------------------------------
+Your code has been rated at 5.00/10 (previous run: 5.00/10, +0.00)
+
+************* Module another
+testing_dir/another.py:2:0: C0304: Final newline missing (missing-final-newline)
+testing_dir/another.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+testing_dir/another.py:1:0: C0116: Missing function or method docstring (missing-function-docstring)
+
+------------------------------------------------------------------
+Your code has been rated at 0.00/10 (previous run: 0.00/10, +0.00)
+
