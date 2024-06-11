@@ -1,6 +1,0 @@
-************* Module one_more
-testing_dir/one_more.py:3:0: C0116: Missing function or method docstring (missing-function-docstring)
-
------------------------------------
-Your code has been rated at 5.00/10
-
