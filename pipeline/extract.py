@@ -19,7 +19,7 @@ def fetch_data() -> list[dict]:
     """
     Fetches data for multiple indices concurrently using a pool of processes.
     """
-    indices = list(range(1,51))
+    indices = list(range(0,51))
     with Pool(processes=8) as pool:
         data = list(pool.imap(get_data, indices))
     return data
