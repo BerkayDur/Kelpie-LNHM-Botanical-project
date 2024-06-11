@@ -94,6 +94,12 @@ jobs:
           CODE_QUALITY: ${{ env.AVG_SCORE }}
           BADGE_PATH: .github/badges/avg_score.svg
 
+
+      - name: Check Pylint Score and all tests pass
+        run: |
+          (( env.PASSED_PERCENTAGE -eq 100 )) && (( env.AVG_SCORE -eq 10.00 ))
+      
+
       # Generate the badge for passed_percentage
       - name: Generate the badge SVG image for passed_percentage
         if: '!cancelled()'
@@ -146,5 +152,5 @@ jobs:
           git add .util/pylint_scores.json
           git add .github/badges/passed_percentage.svg
           git add .github/badges/avg_score.svg
-          git commit -m "Update scores"
+          git commit -m "Update scores" || true
           git push
