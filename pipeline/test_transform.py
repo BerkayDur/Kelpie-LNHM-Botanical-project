@@ -204,7 +204,9 @@ def test_plant_readings_missing_details(example_invalid_data):
         'soil_moisture': None,
         'temperature': None,
         'last_watered': None,
-        'recording_taken': None
+        'recording_taken': None,
+        'name': None,
+        'plant_name': None
     }
 
 
