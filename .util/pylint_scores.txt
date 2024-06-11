@@ -2,7 +2,9 @@
 ------------------------------------
 Your code has been rated at 10.00/10
 
+************* Module extract
+pipeline/extract.py:32:0: C0304: Final newline missing (missing-final-newline)
 
-------------------------------------
-Your code has been rated at 10.00/10
+-----------------------------------
+Your code has been rated at 9.23/10
 
