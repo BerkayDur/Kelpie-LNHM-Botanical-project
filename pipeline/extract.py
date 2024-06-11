@@ -30,6 +30,3 @@ def main():
     Main
     """
     return fetch_data()
-
-if __name__ == "__main__":
-    main()
