@@ -46,13 +46,13 @@ jobs:
         run: |
           :> .util/pylint_scores.txt
           for FILE in $( find . -type d \( -path ./.util -o -path ./.venv \) -prune -false -o \( -name '*.py' ! -name 'test*.py' \) ); do
-            pylint $FILE >> ./.util/pylint_scores.txt
+            pylint $FILE
           done
 
       # Convert Pylint scores to JSON
       - name: Convert Pylint scores to JSON
         if: '!cancelled()'
-        run: python .util/parse_raw_python.py --input .util/pylint_scores.txt --output .util/pyllint_scores.json --type pylint
+        run: python .util/parse_raw_python.py --input .util/pylint_scores.txt --output .util/pylint_scores.json --type pylint
 
       # Conver Pytest scores to JSON
       - name: Convert Pytest scores to JSON
