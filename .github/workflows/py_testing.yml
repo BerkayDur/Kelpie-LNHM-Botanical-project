@@ -19,7 +19,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pytest
-          pip install -r requirements.txt
+          for req in ${find . -name requirements.txt}; do
+            pip install -r $req
+          done
       # Run pytest
       - name: Run tests
         run: pytest
