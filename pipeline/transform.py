@@ -42,7 +42,7 @@ def get_origin_region(reading: dict) -> str | None:
         return None
 
 
-def get_details(reading: dict, detail: str) -> str | None:
+def get_details(reading: dict, detail: str) -> str | int | None:
     """
     Fetches specific details by searching through the keys
     """
@@ -57,9 +57,9 @@ def botanist_details(data: list[dict]) -> dict:
     Returns a dataframe of botanist details
     """
     return {'name': get_botanist_detail(data, 'name'),
-                             'email': get_botanist_detail(data, 'email'),
-                             'phone_no': get_botanist_detail(data, 'phone')
-                             }
+            'email': get_botanist_detail(data, 'email'),
+            'phone_no': get_botanist_detail(data, 'phone')
+            }
 
 
 def plant_details(data: list[dict]) -> dict:
@@ -87,27 +87,43 @@ def plant_readings(data: list[dict]) -> dict:
             'recording_taken': get_details(data, 'recording_taken')
         }
 
-
-def main():
+def group_data(readings: list[dict]) -> tuple[list, list, list]:
     """
-    Main
+    Iterates through the readings and organises different parameters
+    into the relevant list
     """
-    bigdata = extract.fetch_data()
     plant = []
     botanist = []
     plant_reading = []
 
-    for data in bigdata:
-        plant.append(plant_details(data))
-        botanist.append(botanist_details(data))
-        plant_reading.append(plant_readings(data))
+    for reading in readings:
+        plant.append(plant_details(reading))
+        botanist.append(botanist_details(reading))
+        plant_reading.append(plant_readings(reading))
 
-    dim_plant = pd.DataFrame(plant)
-    dim_botanist = pd.DataFrame(botanist)
-    fact_plant_reading = pd.DataFrame(plant_reading)
+    return plant, botanist, plant_reading
+
+
+def convert_to_dataframe(readings: list[dict]) -> pd.DataFrame:
+    """
+    Converts a list into a dataframe
+    """
+    return pd.DataFrame(readings)
+
+
+def main(readings) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    Main
+    """
+    plant, botanist, plant_reading = group_data(readings)
+
+    dim_plant = convert_to_dataframe(plant)
+    dim_botanist = convert_to_dataframe(botanist)
+    fact_plant_reading = convert_to_dataframe(plant_reading)
 
     return dim_plant, dim_botanist, fact_plant_reading
 
 
 if __name__ == "__main__":
-    main()
+    dim_plant, dim_botanist, fact_plant_reading = main(extract.main())
+    print(dim_plant)

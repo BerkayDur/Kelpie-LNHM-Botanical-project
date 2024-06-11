@@ -1,8 +1,8 @@
-from transform import get_botanist_detail
-from unittest.mock import patch, MagicMock
+from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data
+import pytest
 
 @pytest.fixture
-def example_data():
+def example_valid_data():
     return {
         "botanist": {
             "email": "eliza.andrews@lnhm.co.uk",
@@ -36,3 +36,177 @@ def example_data():
         "soil_moisture": 15.478956774353875,
         "temperature": 11.483367104821191
     }
+
+
+@pytest.fixture
+def example_invalid_data():
+    return {"error": "plant not found", "plant_id": 7}
+
+@pytest.fixture
+def example_expected_output():
+    return ([{
+        'plant_id': 8,
+        'plant_name': 'Bird of paradise',
+        'scientific_name': "Heliconia schiedeana 'Fire and Ice'",
+        'origin_longitude': '-3.59625',
+        'origin_latitude': '5.27247',
+        'origin_town': 'Bonoua',
+        'origin_country_code': 'CI',
+        'origin_region': 'Africa'
+    }],
+        [{
+            'name': 'Eliza Andrews',
+            'email': 'eliza.andrews@lnhm.co.uk',
+            'phone_no': '(846)669-6651x75948'}],
+        [{
+            'soil_moisture': 15.478956774353875,
+            'temperature': 11.483367104821191,
+            'last_watered': 'Mon, 10 Jun 2024 13:23:01 GMT',
+            'recording_taken': '2024-06-11 13:00:09'
+        }]
+    )
+
+
+def test_get_botanist_name(example_valid_data):
+    assert get_botanist_detail(example_valid_data, 'name') == "Eliza Andrews"
+
+
+def test_get_botanist_email(example_valid_data):
+    assert get_botanist_detail(
+        example_valid_data, 'email') == "eliza.andrews@lnhm.co.uk"
+
+
+def test_get_botanist_phone(example_valid_data):
+    assert get_botanist_detail(
+        example_valid_data, 'phone') == "(846)669-6651x75948"
+
+
+def test_get_botanist_missing_detail(example_invalid_data):
+    assert get_botanist_detail(
+        example_invalid_data, 'name') == None
+
+
+def test_get_origin_latitude(example_valid_data):
+    assert get_origin_detail(example_valid_data, 0) == "5.27247"
+
+def test_get_origin_longitude(example_valid_data):
+    assert get_origin_detail(example_valid_data, 1) == "-3.59625"
+
+
+def test_get_origin_town(example_valid_data):
+    assert get_origin_detail(example_valid_data, 2) == "Bonoua"
+
+def test_get_origin_country_code(example_valid_data):
+    assert get_origin_detail(example_valid_data, 3) == "CI"
+
+
+def test_get_origin_missing_values(example_invalid_data):
+    assert get_origin_detail(example_invalid_data, 3) == None
+
+
+def test_get_scientific_name(example_valid_data):
+    assert get_scientific_name(
+        example_valid_data) == "Heliconia schiedeana 'Fire and Ice'"
+
+
+def test_get_scientific_name_missing(example_invalid_data):
+    assert get_scientific_name(example_invalid_data) == None
+
+
+def test_get_origin_region(example_valid_data):
+    assert get_origin_region(example_valid_data) == 'Africa'
+
+
+def test_get_temperature(example_valid_data):
+    assert get_details(example_valid_data,
+                       'temperature') == 11.483367104821191
+
+
+def test_get_soil_moisture(example_valid_data):
+    assert get_details(example_valid_data,
+                       'soil_moisture') == 15.478956774353875
+
+
+def test_get_last_watered(example_valid_data):
+    assert get_details(example_valid_data,
+                       'last_watered') == 'Mon, 10 Jun 2024 13:23:01 GMT'
+
+
+def test_get_recording_taken(example_valid_data):
+    assert get_details(example_valid_data,
+                       'recording_taken') == '2024-06-11 13:00:09'
+
+
+def test_get_detail_missing(example_invalid_data):
+    assert get_details(example_invalid_data,
+                       'recording_taken') == None
+    
+
+def test_botanist_details(example_valid_data):
+    assert botanist_details(example_valid_data) == {
+        'name': 'Eliza Andrews',
+        'email': 'eliza.andrews@lnhm.co.uk',
+        'phone_no': '(846)669-6651x75948'
+        }
+
+
+def test_botanist_missing_details(example_invalid_data):
+    assert botanist_details(example_invalid_data) == {
+        'name': None,
+        'email': None,
+        'phone_no': None
+        }
+
+
+def test_plant_details(example_valid_data):
+    assert plant_details(example_valid_data) == {
+        'plant_id': 8,
+        'plant_name': 'Bird of paradise',
+        'scientific_name': "Heliconia schiedeana 'Fire and Ice'",
+        'origin_longitude': '-3.59625',
+        'origin_latitude': '5.27247',
+        'origin_town': 'Bonoua',
+        'origin_country_code': 'CI',
+        'origin_region': 'Africa'
+        }
+
+
+def test_plant_details_missing(example_invalid_data):
+    assert plant_details(example_invalid_data) == {
+        'plant_id': 7,
+        'plant_name': None,
+        'scientific_name': None,
+        'origin_longitude': None,
+        'origin_latitude': None,
+        'origin_town': None,
+        'origin_country_code': None,
+        'origin_region': None
+        }
+
+
+def test_plant_readings(example_valid_data):
+    assert plant_readings(example_valid_data) == {
+        'soil_moisture': 15.478956774353875,
+        'temperature': 11.483367104821191,
+        'last_watered': 'Mon, 10 Jun 2024 13:23:01 GMT',
+        'recording_taken': '2024-06-11 13:00:09'
+        }
+
+
+def test_plant_readings_missing_details(example_invalid_data):
+    assert plant_readings(example_invalid_data) == {
+        'soil_moisture': None,
+        'temperature': None,
+        'last_watered': None,
+        'recording_taken': None
+    }
+
+
+def test_group_data(example_valid_data, example_expected_output):
+   assert group_data([example_valid_data]) == example_expected_output
+
+
+def convert_to_dataframe(example_expected_output):
+    plant, botanist, plant_reading = example_expected_output
+
+    assert convert_to_dataframe(plant) == example_expected_output
