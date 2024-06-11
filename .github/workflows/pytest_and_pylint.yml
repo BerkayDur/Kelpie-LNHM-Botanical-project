@@ -22,63 +22,76 @@ jobs:
           for FILE in $(find . -name 'requirements.txt'); do
             pip install -r $FILE
           done
-      # # Run pytest
-      # - name: Run tests
-      #   run: pytest
-      # # Write Pytest overview results to a file
-      # - name: Record test results
-      #   if: '!cancelled()'
-      #   run: |
-      #     [ ! -d .util ] && mkdir -p .util
-      #     [ ! -f .util/pytest_scores.txt ] && touch '.util/pytest_scores.txt'
-      #     pytest -r N --tb=no > .util/pytest_scores.txt || true
-      # Run pylint
+
+      # Create .util
+      - name: Create .util
+        run: |
+          [ ! -d .util ] && mkdir -p .util
+
+      # Run pytest
+      - name: Run tests
+        run: pytest
+
+      # Write Pytest overview results to a file
+      - name: Record test results
+        if: '!cancelled()'
+        run: |
+          [ ! -f .util/pytest_scores.txt ] && touch '.util/pytest_scores.txt'
+          pytest -r N --tb=no > .util/pytest_scores.txt || true
+      Run pylint
+
+      # Run Pylint and Get output into file
       - name: Run Pylint
         if: '!cancelled()'
         run: |
-          for FILE in $( find . -type d \( -path ./.util \) -prune -false -o \( -name '*.py' ! -name 'test*.py' \) ); do
-            echo $FILE
+          :> .util/pylint_scores.txt
+          for FILE in $( find . -type d \( -path ./.util -o -path ./.venv \) -prune -false -o \( -name '*.py' ! -name 'test*.py' \) ); do
+            pylint $FILE >> ./.util/pylint_scores.txt
           done
 
+      # Convert Pylint scores to JSON
+      - name: Convert Pylint scores to JSON
+        if: '!cancelled()'
+        run: python .util/parse_raw_python.py --input .util/pylint_scores.txt --output .util/pytest_scores.json --type pylint
 
-      # - name: Convert scores to json
-      #   if: '!cancelled()'
-      #   run: python .util/parse_raw_python.py --input .util/pytest_scores.txt --output .util/pytest_scores.json --type pytest
+      - name: Convert scores to json
+        if: '!cancelled()'
+        run: python .util/parse_raw_python.py --input .util/pytest_scores.txt --output .util/pytest_scores.json --type pytest
 
-      # - name: Create badge path directory
-      #   if: '!cancelled()'
-      #   run: |
-      #     [ ! -d .github/badges ] && mkdir -p .github/badges
+      - name: Create badge path directory
+        if: '!cancelled()'
+        run: |
+          [ ! -d .github/badges ] && mkdir -p .github/badges
       
-      # - name: Create base badges
-      #   if: '!cancelled()'
-      #   run: |
-      #     [ ! -f .github/badges/passed_percentage.svg ] && touch .github/badges/passed_percentage.svg
+      - name: Create base badges
+        if: '!cancelled()'
+        run: |
+          [ ! -f .github/badges/passed_percentage.svg ] && touch .github/badges/passed_percentage.svg
 
-      # - name: Obtain passed_percentage from JSON
-      #   if: '!cancelled()'
-      #   run: |
-      #     echo "PASSED_PERCENTAGE=$(jq '.passed_percentage' .util/pytest_scores.json)" >> $GITHUB_ENV
-      #   env:
-      #     CODE_QUALITY: ${{ env.PASSED_PERCENTAGE }}
-      #     BADGE_PATH: .github/badges/passed_percentage.svg
-      # - name: Generate the badge SVG image
-      #   if: '!cancelled()'
-      #   uses: emibcn/badge-action@v1
-      #   id: quality_badge
-      #   with:
-      #     label: 'Passing Tests: '
-      #     status: ${{ format('{0}%', env.PASSED_PERCENTAGE) }}
-      #     color: 'blue'
-      #     path: .github/badges/passed_percentage.svg
-      #     scale: 1.5
-      # - name: Upload badge as artefact
-      #   if: '!cancelled()'
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: badge
-      #     path: .github/badges/passed_percentage.svg
-      #     if-no-files-found: ignore
+      - name: Obtain passed_percentage from JSON
+        if: '!cancelled()'
+        run: |
+          echo "PASSED_PERCENTAGE=$(jq '.passed_percentage' .util/pytest_scores.json)" >> $GITHUB_ENV
+        env:
+          CODE_QUALITY: ${{ env.PASSED_PERCENTAGE }}
+          BADGE_PATH: .github/badges/passed_percentage.svg
+      - name: Generate the badge SVG image
+        if: '!cancelled()'
+        uses: emibcn/badge-action@v1
+        id: quality_badge
+        with:
+          label: 'Passing Tests: '
+          status: ${{ format('{0}%', env.PASSED_PERCENTAGE) }}
+          color: 'blue'
+          path: .github/badges/passed_percentage.svg
+          scale: 1.5
+      - name: Upload badge as artefact
+        if: '!cancelled()'
+        uses: actions/upload-artifact@v2
+        with:
+          name: badge
+          path: .github/badges/passed_percentage.svg
+          if-no-files-found: ignore
 
 
       # Commit results
@@ -90,6 +103,8 @@ jobs:
           git config --local user.name "Testing bot"
           git add .util/pytest_scores.txt
           git add .util/pytest_scores.json
+          git add .util/pylint_scores.txt
+          git add .util/pylint_scores.json
           git add .github/badges/passed_percentage.svg
-          git commit -m "Update Pytest scores"
+          git commit -m "Update scores"
           git push
