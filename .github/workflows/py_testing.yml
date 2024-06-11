@@ -33,11 +33,11 @@ jobs:
           [ ! -f .util/pytest_scores.txt ] && touch '.util/pytest_scores.txt'
           pytest -r N --tb=no > .util/pytest_scores.txt || true
       
-      - name: Print test
-        run: echo "hello"
       - name: Convert scores to json
+        if: '!cancelled()'
         run: python .util/parse_raw_python.py --input pytest_scores.txt --output pytest_scores.json --type pytest
       - name: Obtain passed_percentage from JSON
+        if: '!cancelled()'
         run: |
           echo "SCORE=${jq 'passed_percentage' pytest_scores.json}" >> $GITHUB_ENV
       # Commit results
