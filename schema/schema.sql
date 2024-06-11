@@ -2,9 +2,7 @@ USE plants;
 GO
 
 DROP TABLE IF EXISTS alpha.FACT_plant_reading;
-GO
 DROP TABLE IF EXISTS alpha.DIM_plant;
-GO
 DROP TABLE IF EXISTS alpha.DIM_botanist;
 GO
 
@@ -16,6 +14,7 @@ CREATE TABLE alpha.DIM_botanist (
     PRIMARY KEY (botanist_id)
 );
 GO
+
 CREATE TABLE alpha.DIM_plant (
     plant_id INT IDENTITY(1, 1),
     plant_name TEXT NOT NULL,
@@ -28,6 +27,7 @@ CREATE TABLE alpha.DIM_plant (
     PRIMARY KEY (plant_id)
 );
 GO
+
 CREATE TABLE alpha.FACT_plant_reading (
     reading_id INT IDENTITY(1, 1),
     soil_moisture FLOAT NOT NULL,

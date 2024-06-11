@@ -1,3 +1,0 @@
-pymssql
-python-dotenv
-pylint
