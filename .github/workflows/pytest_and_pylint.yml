@@ -96,6 +96,7 @@ jobs:
 
 
       - name: Check Pylint Score and all tests pass
+        if: '!cancelled()'
         run: |
           (( env.PASSED_PERCENTAGE -eq 100 )) && (( env.AVG_SCORE -eq 10.00 ))
       
