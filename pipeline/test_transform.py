@@ -1,4 +1,4 @@
-from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data, convert_to_dataframe, main
+from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data, convert_to_dataframe, main, clean_data
 import pytest
 import pandas as pd
 from unittest.mock import patch
@@ -232,3 +232,29 @@ def test_main(example_valid_data):
             dim_plant, pd.DataFrame)
     assert isinstance(dim_botanist, pd.DataFrame)
     assert isinstance(fact_plant_reading, pd.DataFrame)
+
+
+
+def test_clean_data():
+    data = [{'A': 'test',
+            'B': None,
+             'C': 'test'},
+            {'A': 'test',
+            'B': 'test',
+             'C': 'test'},
+            {'A': None,
+            'B': None,
+             'C': 'test'}]
+    df_with_nan = pd.DataFrame(data)
+
+    cleaned_data = [{'A': 'test',
+                     'B': None,
+                     'C': 'test'},
+                    {'A': 'test',
+                     'B': 'test',
+                     'C': 'test'}]
+    df_cleaned_expected = pd.DataFrame(cleaned_data)
+
+    cleaned_df = clean_data(df_with_nan, threshold=2)
+
+    assert cleaned_df.equals(df_cleaned_expected)

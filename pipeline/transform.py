@@ -1,7 +1,5 @@
 """Transform script"""
 import pandas as pd
-import numpy as np
-import extract
 
 def get_botanist_detail(reading: dict, botanist_detail: str) -> str | None:
     """
@@ -129,8 +127,3 @@ def main(readings) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     fact_plant_reading = convert_to_dataframe(plant_reading)
 
     return clean_data(dim_plant), clean_data(dim_botanist), clean_data(fact_plant_reading)
-
-
-if __name__ == "__main__":
-    dim_plant, dim_botanist, fact_plant_reading = main(extract.main())
-    print(dim_plant, dim_botanist, fact_plant_reading)
