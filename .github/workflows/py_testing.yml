@@ -36,10 +36,15 @@ jobs:
       - name: Convert scores to json
         if: '!cancelled()'
         run: python .util/parse_raw_python.py --input .util/pytest_scores.txt --output .util/pytest_scores.json --type pytest
+
       - name: Obtain passed_percentage from JSON
         if: '!cancelled()'
         run: |
           echo "SCORE=$(jq '.passed_percentage' .util/pytest_scores.json)" >> $GITHUB_ENV
+        env:
+          CODE_QUALITY: ${{ env.SCORE }}
+          BADGE_PATH: .github/badges/pytest.svg
+
       # Commit results
       - name: Push results
         if: '!cancelled()'
@@ -47,5 +52,7 @@ jobs:
           git config --local user.email "berkaydur138@gmail.com"
           git config --local user.name "Testing bot"
           git add .util/pytest_scores.txt
+          git add .util/pytest_scores.json
+          git add .github/badges/pytest.svg
           git commit -m "Update Pytest scores"
           git push
