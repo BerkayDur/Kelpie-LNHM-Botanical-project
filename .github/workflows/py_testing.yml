@@ -49,6 +49,7 @@ jobs:
           CODE_QUALITY: ${{ env.PASSED_PERCENTAGE }}
           BADGE_PATH: .github/badges/passed_percentage.svg
       - name: Generate the badge SVG image
+        if: '!cancelled()'
         uses: emibcn/badge-action@v1
         id: quality_badge
         with:
@@ -58,6 +59,7 @@ jobs:
           path: .github/badges/passed_percentage.svg
           scale: 1.5
       - name: Upload badge as artefact
+        if: '!cancelled()'
         uses: actions/upload-artifact@v2
         with:
           name: badge
