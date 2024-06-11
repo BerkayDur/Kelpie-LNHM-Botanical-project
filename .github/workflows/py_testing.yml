@@ -38,10 +38,12 @@ jobs:
         run: python .util/parse_raw_python.py --input .util/pytest_scores.txt --output .util/pytest_scores.json --type pytest
 
       - name: Create badge path directory
+        if: '!cancelled()'
         run: |
           [ ! -d .github/badges ] && mkdir -p .github/badges
       
       - name: Create base badges
+        if: '!cancelled()'
         run: |
           [ ! -f .github/badges/passed_percentage.svg ] && touch .github/badges/passed_percentage.svg
 
