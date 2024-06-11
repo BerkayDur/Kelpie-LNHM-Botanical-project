@@ -1,4 +1,7 @@
 pytest
 pylint
-boto3
-python-dotenv
+requests
+rich
+aiohttp
+aiodns
+pandas
