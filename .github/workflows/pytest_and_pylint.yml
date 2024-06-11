@@ -45,12 +45,14 @@ jobs:
         run: |
           :> .util/pylint_scores.txt
 
-      # Run Pylint and Get output into file   pylint $FILE >> .util/pylint_scores.txt
+      # Run Pylint and Get output into file
       - name: Run Pylint
         if: '!cancelled()'
+        concurrency: my-pylint-job
+        cancel-in-progress: true
         run: |
           for FILE in $( find . -type d \( -path ./.util -o -path ./.venv \) -prune -false -o \( -name '*.py' ! -name 'test*.py' \) ); do
-            echo $FILE
+            pylint $FILE >> .util/pylint_scores.txt
           done
 
       # Convert Pylint scores to JSON
