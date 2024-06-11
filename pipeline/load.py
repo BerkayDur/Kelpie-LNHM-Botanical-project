@@ -25,37 +25,18 @@ def get_connection():
     return conn
 
 
-def method(pd_table, conn, keys, data_iter):
-    ...
-
-
 def upload_plant_data(conn):
     """Uploads plant data to the database."""
     dim_plant, dim_botanist, fact_plant_reading = transform.main()
     cursor = get_cursor(conn)
 
-    # dim_plant.to_sql(name='alpha.dim_plant', con=conn,
-    #                  schema='alpha', method=method)
-    # dim_botanist.to_sql(name='alpha.dim_botanist', con=conn,
-    #                     schema='alpha', method=method)
-    # fact_plant_reading.to_sql(
-    #     name='fact_plant_reading', con=conn, schema='alpha', if_exists="append", method=method)
-    dim_botanist_list = dim_botanist.to_numpy().tolist()
-    print(dim_botanist_list)
-    dim_plant_list = dim_plant.to_numpy().tolist()
+    dim_botanist_list = [['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], [None, None, None], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], [
+        'Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], [None, None, None], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992']]
 
-    botanist_ids = cursor.executemany(
-        """insert into alpha.dim_botanist(name, email, phone_no)
-        VALUES (%s, %s, %s);""", dim_botanist_list)
-    print(botanist_ids)
-    plant_ids = cursor.executemany(
-        """insert into alpha.dim_plant(plant_name, scientific_name, origin_longitude, origin_latitude, origin_town, origin_country_code, origin_region)
-        VALUES (%s, %s, %s, %s, %s, %s, %s);""", dim_plant_list)
-    print(plant_ids)
-    # cursor.executemany(
-    #     """insert into alpha.fact_plant_reading (soil_moisture, temperature, taken_at, watered_at, plant_id, botanist_id)
-    #     VALUES (%s, %s, %s, %s, (SELECT plant_id FROM alpha.dim_plant WHERE plant_name = %s)
-    # , %s);""", fact_plant_reading)
+    cursor.executemany(
+        """insert into alpha.fact_plant_reading (soil_moisture, temperature, taken_at, watered_at, plant_id, botanist_id)
+        VALUES (%s, %s, %s, %s, (SELECT plant_id FROM alpha.dim_plant WHERE plant_name = %s)
+    , (SELECT botanist_id FROM alpha.dim_botanist WHERE botanist_name=%s));""", fact_plant_reading)
     conn.commit()
 
     cursor.close()
