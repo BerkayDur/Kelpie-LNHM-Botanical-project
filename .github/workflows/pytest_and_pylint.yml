@@ -79,7 +79,6 @@ jobs:
         if: '!cancelled()'
         run: |
           echo "PASSED_PERCENTAGE=$(jq '.passed_percentage' .util/pytest_scores.json)" >> $GITHUB_ENV
-          echo "AVG_SCORE=${jq '.avg_score' .util/pylint_scores.json}" >> $GITHUB_ENV
         env:
           CODE_QUALITY: ${{ env.PASSED_PERCENTAGE }}
           BADGE_PATH: .github/badges/passed_percentage.svg
@@ -87,7 +86,7 @@ jobs:
       - name: Obtain avg_score from JSON
         if: '!cancelled()'
         run: |
-          echo "AVG_SCORE=${jq '.avg_score' .util/pylint_scores.json}" >> $GITHUB_ENV
+          echo "AVG_SCORE=$(jq '.avg_score' .util/pylint_scores.json)" >> $GITHUB_ENV
         env:
           CODE_QUALITY: ${{ env.AVG_SCORE }}
           BADGE_PATH: .github/badges/avg_score.svg
