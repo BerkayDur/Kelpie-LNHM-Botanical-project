@@ -39,7 +39,7 @@ jobs:
       - name: Obtain passed_percentage from JSON
         if: '!cancelled()'
         run: |
-          echo "SCORE=${jq 'passed_percentage' pytest_scores.json}" >> $GITHUB_ENV
+          echo "SCORE=${jq '.passed_percentage' pytest_scores.json}" >> $GITHUB_ENV
       # Commit results
       - name: Push results
         if: '!cancelled()'
