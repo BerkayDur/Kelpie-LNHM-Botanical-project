@@ -2,17 +2,25 @@ from extract import get_data, fetch_data
 from unittest.mock import patch, MagicMock
 
 
-
 @patch('extract.requests.get')
 def test_get_data_success(mock_get):
-    mock_response = MagicMock()
     expected_data = {'id': 1, 'name': 'Test Plant'}
-    mock_response.json.return_value = expected_data
-    mock_get.return_value = mock_response
+    mock_get.return_value.json.return_value = expected_data
 
     result = get_data(1)
 
+    assert mock_get.call_args[0][0] == 'https://data-eng-plants-api.herokuapp.com/plants/1'
+    assert mock_get.call_args[1] == {'timeout': 60}
+    assert mock_get.call_count == 1
+    assert mock_get.return_value.json.call_count == 1
     assert result == expected_data
-    mock_get.assert_called_once_with(
-        'https://data-eng-plants-api.herokuapp.com/plants/1', timeout=60)
 
+
+@patch('extract.get_data')
+@patch('extract.Pool')
+def test_fetch_data_success(mock_Pool, mock_get_data):
+    fetch_data()
+    assert mock_Pool.return_value.__enter__.return_value.imap.call_count == 1
+    assert mock_Pool.return_value.__enter__.return_value.imap.call_args[0][1] == list(
+        range(0, 51))
+    assert mock_Pool.return_value.__enter__.return_value.imap.call_args[0][0] == mock_get_data

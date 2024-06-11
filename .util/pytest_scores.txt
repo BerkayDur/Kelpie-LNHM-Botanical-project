@@ -1,9 +1,6 @@
 ============================= test session starts ==============================
 platform linux -- Python 3.12.3, pytest-8.2.2, pluggy-1.5.0
 rootdir: /home/runner/work/Kelpie-LNHM-Botanical-project/Kelpie-LNHM-Botanical-project
-collected 25 items
+collected 0 items
 
-pipeline/test_extract.py .                                               [  4%]
-pipeline/test_transform.py ........................                      [100%]
-
-============================== 25 passed in 0.45s ==============================
+============================ no tests ran in 0.00s =============================
