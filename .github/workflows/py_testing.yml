@@ -37,6 +37,14 @@ jobs:
         if: '!cancelled()'
         run: python .util/parse_raw_python.py --input .util/pytest_scores.txt --output .util/pytest_scores.json --type pytest
 
+      - name: Create badge path directory
+        run: |
+          [ ! -d .github/badges ] && mkdir -p .github/badges
+      
+      - name: Create base badges
+        run: |
+          [ ! -f .github/badges/passed_percentage.svg ] && touch .github/badges/passed_percentage.svg
+
       - name: Obtain passed_percentage from JSON
         if: '!cancelled()'
         run: |
