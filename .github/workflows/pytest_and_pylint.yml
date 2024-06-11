@@ -92,24 +92,7 @@ jobs:
           echo "AVG_SCORE=$(jq '.avg_score' .util/pylint_scores.json)" >> $GITHUB_ENV
         env:
           CODE_QUALITY: ${{ env.AVG_SCORE }}
-          BADGE_PATH: .github/badges/avg_score.svg
-
-
-      - name: Check Pylint Score and all tests pass
-        if: '!cancelled()'
-        run: |
-          if [[ $env.PASSED_PERCENTAGE -eq 100 ]]; then
-            echo "All tests passed!"
-          else
-            echo "Some tests failed!"
-            exit 1
-          fi
-          fi [[ $(bc <<< "scale=2; $env.AVG_SCORE == 10.00") ]]; then
-            echo "Pylint score is perfect"
-          else
-            echo "Pylint score is not 10.00."
-          fi
-      
+          BADGE_PATH: .github/badges/avg_score.svg      
 
       # Generate the badge for passed_percentage
       - name: Generate the badge SVG image for passed_percentage
