@@ -60,7 +60,7 @@ jobs:
         id: quality_badge
         with:
           label: 'Test Pass:'
-          status: ${{ env.PASSED_PERCENTAGE }}
+          status: ${{ format('{0}%', env.PASSED_PERCENTAGE) }}
           color: 'blue'
           path: .github/badges/passed_percentage.svg
           scale: 1.5
