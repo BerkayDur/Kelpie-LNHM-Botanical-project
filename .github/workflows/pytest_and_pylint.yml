@@ -48,7 +48,8 @@ jobs:
       # Run Pylint and Get output into file
       - name: Run Pylint
         if: '!cancelled()'
-        concurrency: my-pylint-job
+        concurrency:
+          group: my-pylint-job
         run: |
           for FILE in $( find . -type d \( -path ./.util -o -path ./.venv \) -prune -false -o \( -name '*.py' ! -name 'test*.py' \) ); do
             pylint $FILE >> .util/pylint_scores.txt
