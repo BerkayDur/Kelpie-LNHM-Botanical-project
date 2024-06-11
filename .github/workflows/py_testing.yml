@@ -41,6 +41,7 @@ jobs:
         if: '!cancelled()'
         run: |
           echo "SCORE=$(jq '.passed_percentage' .util/pytest_scores.json)" >> $GITHUB_ENV
+          [ ! -d .github/badges ] && mkdir -p .github/badges
         env:
           CODE_QUALITY: ${{ env.SCORE }}
           BADGE_PATH: .github/badges/pytest.svg
