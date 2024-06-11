@@ -29,6 +29,7 @@ jobs:
       - name: Record test results
         if: '!cancelled()'
         run: |
+          [ ! -d .util ] && mkdir -p .util
           [ ! -f .util/pytest_scores.txt ] && touch '.util/pytest_scores.txt'
           pytest -r N --tb=no > .util/pytest_scores.txt || true
       # Commit results
