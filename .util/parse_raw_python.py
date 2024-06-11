@@ -29,14 +29,20 @@ def get_total_number_of_failed_tests(content: str) -> int:
     for pytest tests.'''
     if 'no tests ran' in content:
         return 0
-    return int(re.findall(r'\d+(?= failed)', content)[0])
+    try:
+        return int(re.findall(r'\d+(?= failed)', content)[0])
+    except IndexError:
+        return 0
 
 def get_total_number_of_passed_tests(content: str) -> int:
     '''Calculate the number of failed tests in contents. This works specifically
     for pytest tests.'''
     if 'no tests ran' in content:
         return 0
-    return int(re.findall(r'\d+(?= passed)', content)[0])
+    try:
+        return int(re.findall(r'\d+(?= passed)', content)[0])
+    except IndexError:
+        return 0
 
 def get_avg_pylint_scores(content: str) -> list[float]:
     '''Get the average pylint scores across all the tests completed.'''
