@@ -1,5 +1,7 @@
-from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data
+from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data, convert_to_dataframe, main
 import pytest
+import pandas as pd
+from unittest.mock import patch
 
 @pytest.fixture
 def example_valid_data():
@@ -206,7 +208,27 @@ def test_group_data(example_valid_data, example_expected_output):
    assert group_data([example_valid_data]) == example_expected_output
 
 
-def convert_to_dataframe(example_expected_output):
-    plant, botanist, plant_reading = example_expected_output
+def test_convert_to_dataframe():
+    readings = [{
+        'soil_moisture': 15.478956774353875,
+        'temperature': 11.483367104821191,
+        'last_watered': 'Mon, 10 Jun 2024 13:23:01 GMT',
+        'recording_taken': '2024-06-11 13:00:09'
+    }]
+    actual_df = convert_to_dataframe(readings)
 
-    assert convert_to_dataframe(plant) == example_expected_output
+    assert isinstance(
+        actual_df, pd.DataFrame)
+    
+    expected_columns = ['soil_moisture', 'temperature',
+                        'last_watered', 'recording_taken']
+    actual_columns = list(actual_df.columns)
+    assert actual_columns == expected_columns
+
+def test_main(example_valid_data):
+    dim_plant, dim_botanist, fact_plant_reading = main([example_valid_data])
+
+    assert isinstance(
+            dim_plant, pd.DataFrame)
+    assert isinstance(dim_botanist, pd.DataFrame)
+    assert isinstance(fact_plant_reading, pd.DataFrame)
