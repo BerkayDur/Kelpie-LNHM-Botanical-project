@@ -1,6 +1,4 @@
 """Transform script"""
-
-import extract
 import pandas as pd
 
 def get_botanist_detail(reading: dict, botanist_detail: str) -> str | None:
@@ -52,39 +50,39 @@ def get_details(reading: dict, detail: str) -> str | int | None:
         return None
 
 
-def botanist_details(data: list[dict]) -> dict:
+def botanist_details(reading: list[dict]) -> dict:
     """
     Returns a dataframe of botanist details
     """
-    return {'name': get_botanist_detail(data, 'name'),
-            'email': get_botanist_detail(data, 'email'),
-            'phone_no': get_botanist_detail(data, 'phone')
+    return {'name': get_botanist_detail(reading, 'name'),
+            'email': get_botanist_detail(reading, 'email'),
+            'phone_no': get_botanist_detail(reading, 'phone')
             }
 
 
-def plant_details(data: list[dict]) -> dict:
+def plant_details(reading: list[dict]) -> dict:
     """
     Returns a dataframe of plant details
     """
-    return {'plant_id': get_details(data, 'plant_id'),
-                    'plant_name': get_details(data, 'name'),
-                    'scientific_name': get_scientific_name(data),
-                    'origin_longitude': get_origin_detail(data, 1),
-                    'origin_latitude': get_origin_detail(data, 0),
-                    'origin_town': get_origin_detail(data, 2),
-                    'origin_country_code': get_origin_detail(data, 3),
-                    'origin_region': get_origin_region(data)}
+    return {'plant_id': get_details(reading, 'plant_id'),
+                    'plant_name': get_details(reading, 'name'),
+                    'scientific_name': get_scientific_name(reading),
+                    'origin_longitude': get_origin_detail(reading, 1),
+                    'origin_latitude': get_origin_detail(reading, 0),
+                    'origin_town': get_origin_detail(reading, 2),
+                    'origin_country_code': get_origin_detail(reading, 3),
+                    'origin_region': get_origin_region(reading)}
 
 
-def plant_readings(data: list[dict]) -> dict:
+def plant_readings(reading: list[dict]) -> dict:
     """
     Returns a dataframe of reading details
     """
     return {
-            'soil_moisture': get_details(data, 'soil_moisture'),
-            'temperature': get_details(data, 'temperature'),
-            'last_watered': get_details(data, 'last_watered'),
-            'recording_taken': get_details(data, 'recording_taken')
+            'soil_moisture': get_details(reading, 'soil_moisture'),
+            'temperature': get_details(reading, 'temperature'),
+            'last_watered': get_details(reading, 'last_watered'),
+            'recording_taken': get_details(reading, 'recording_taken')
         }
 
 def group_data(readings: list[dict]) -> tuple[list, list, list]:
@@ -122,8 +120,3 @@ def main(readings) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     fact_plant_reading = convert_to_dataframe(plant_reading)
 
     return dim_plant, dim_botanist, fact_plant_reading
-
-
-if __name__ == "__main__":
-    dim_plant, dim_botanist, fact_plant_reading = main(extract.main())
-    print(dim_plant)
