@@ -58,7 +58,7 @@ jobs:
           path: .github/badges/passed_percentage.svg
           scale: 1.5
       - name: Upload badge as artefact
-        uses: actions/upload-artefact@v2
+        uses: actions/upload-artifact@v2
         with:
           name: badge
           path: .github/badges/passed_percentage.svg
