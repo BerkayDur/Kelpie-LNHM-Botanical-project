@@ -26,10 +26,11 @@ jobs:
       # Create .util
       - name: Create .util
         run: |
-          [ ! -d .util ] && mkdir -p .util
+          [ ! -d .util ] && mkdir -p .util || true
 
       # Run pytest
       - name: Run tests
+        if: '!cancelled()'
         run: pytest
 
       # Write Pytest overview results to a file
@@ -53,15 +54,18 @@ jobs:
         if: '!cancelled()'
         run: python .util/parse_raw_python.py --input .util/pylint_scores.txt --output .util/pytest_scores.json --type pylint
 
-      - name: Convert scores to json
+      # Conver Pytest scores to JSON
+      - name: Convert Pytest scores to JSON
         if: '!cancelled()'
         run: python .util/parse_raw_python.py --input .util/pytest_scores.txt --output .util/pytest_scores.json --type pytest
 
+      # Create Directory for badges
       - name: Create badge path directory
         if: '!cancelled()'
         run: |
           [ ! -d .github/badges ] && mkdir -p .github/badges
       
+      # Create Base badges for 
       - name: Create base badges
         if: '!cancelled()'
         run: |
