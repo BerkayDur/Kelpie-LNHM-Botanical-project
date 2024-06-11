@@ -59,7 +59,7 @@ jobs:
         uses: emibcn/badge-action@v1
         id: quality_badge
         with:
-          label: 'Test Pass:'
+          label: 'Passing Tests: '
           status: ${{ format('{0}%', env.PASSED_PERCENTAGE) }}
           color: 'blue'
           path: .github/badges/passed_percentage.svg
