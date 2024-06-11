@@ -38,7 +38,6 @@ jobs:
         run: |
           [ ! -f .util/pytest_scores.txt ] && touch '.util/pytest_scores.txt'
           pytest -r N --tb=no > .util/pytest_scores.txt || true
-      Run pylint
 
       # Run Pylint and Get output into file
       - name: Run Pylint
