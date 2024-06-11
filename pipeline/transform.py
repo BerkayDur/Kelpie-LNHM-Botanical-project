@@ -82,7 +82,9 @@ def plant_readings(reading: list[dict]) -> dict:
             'soil_moisture': get_details(reading, 'soil_moisture'),
             'temperature': get_details(reading, 'temperature'),
             'last_watered': get_details(reading, 'last_watered'),
-            'recording_taken': get_details(reading, 'recording_taken')
+            'recording_taken': get_details(reading, 'recording_taken'),
+            'name': get_botanist_detail(reading, 'name'),
+            'plant_name': get_details(reading, 'name'),
         }
 
 def group_data(readings: list[dict]) -> tuple[list, list, list]:

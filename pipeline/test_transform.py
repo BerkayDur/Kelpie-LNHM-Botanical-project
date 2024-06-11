@@ -64,7 +64,9 @@ def example_expected_output():
             'soil_moisture': 15.478956774353875,
             'temperature': 11.483367104821191,
             'last_watered': 'Mon, 10 Jun 2024 13:23:01 GMT',
-            'recording_taken': '2024-06-11 13:00:09'
+            'recording_taken': '2024-06-11 13:00:09',
+            'name':  'Eliza Andrews',
+            'plant_name': 'Bird of paradise'
         }]
     )
 
@@ -191,7 +193,9 @@ def test_plant_readings(example_valid_data):
         'soil_moisture': 15.478956774353875,
         'temperature': 11.483367104821191,
         'last_watered': 'Mon, 10 Jun 2024 13:23:01 GMT',
-        'recording_taken': '2024-06-11 13:00:09'
+        'recording_taken': '2024-06-11 13:00:09',
+        'name':  'Eliza Andrews',
+        'plant_name': 'Bird of paradise'
         }
 
 
