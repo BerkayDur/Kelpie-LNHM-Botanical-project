@@ -52,7 +52,7 @@ jobs:
       # Convert Pylint scores to JSON
       - name: Convert Pylint scores to JSON
         if: '!cancelled()'
-        run: python .util/parse_raw_python.py --input .util/pylint_scores.txt --output .util/pytest_scores.json --type pylint
+        run: python .util/parse_raw_python.py --input .util/pylint_scores.txt --output .util/pyllint_scores.json --type pylint
 
       # Conver Pytest scores to JSON
       - name: Convert Pytest scores to JSON
