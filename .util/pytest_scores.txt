@@ -3,6 +3,6 @@ platform linux -- Python 3.12.3, pytest-8.2.2, pluggy-1.5.0
 rootdir: /home/runner/work/Kelpie-LNHM-Botanical-project/Kelpie-LNHM-Botanical-project
 collected 4 items
 
-testing_workflows/test_main.py ....                                      [100%]
+testing_workflows/test_main.py F...                                      [100%]
 
-============================== 4 passed in 0.01s ===============================
+========================= 1 failed, 3 passed in 0.01s ==========================
