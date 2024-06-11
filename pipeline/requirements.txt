@@ -5,3 +5,6 @@ rich
 aiohttp
 aiodns
 pandas
+python-dotenv
+sqlalchemy
+pyodbc
