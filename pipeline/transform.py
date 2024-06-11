@@ -1,5 +1,7 @@
 """Transform script"""
 import pandas as pd
+import numpy as np
+import extract
 
 def get_botanist_detail(reading: dict, botanist_detail: str) -> str | None:
     """
@@ -109,6 +111,13 @@ def convert_to_dataframe(readings: list[dict]) -> pd.DataFrame:
     return pd.DataFrame(readings)
 
 
+def clean_data(df: pd.DataFrame, threshold: int = 2) -> pd.DataFrame:
+    """
+    Drops all 
+    """
+    df = df.dropna(thresh=threshold)
+    return df
+
 def main(readings) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Main
@@ -119,4 +128,9 @@ def main(readings) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     dim_botanist = convert_to_dataframe(botanist)
     fact_plant_reading = convert_to_dataframe(plant_reading)
 
-    return dim_plant, dim_botanist, fact_plant_reading
+    return clean_data(dim_plant), clean_data(dim_botanist), clean_data(fact_plant_reading)
+
+
+if __name__ == "__main__":
+    dim_plant, dim_botanist, fact_plant_reading = main(extract.main())
+    print(dim_plant, dim_botanist, fact_plant_reading)
