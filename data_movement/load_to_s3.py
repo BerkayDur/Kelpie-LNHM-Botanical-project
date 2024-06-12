@@ -2,9 +2,10 @@
 
 from os import path
 from os import environ as CONFIG
+from datetime import datetime
 from dotenv import load_dotenv
-import botocore
 import boto3
+import botocore
 import botocore.client
 import botocore.exceptions
 import mypy_boto3_s3.client as s3_client
@@ -25,6 +26,11 @@ def is_s3(client: s3_client) -> bool:
     return (isinstance(client, botocore.client.BaseClient)
             and client._service_model.service_name == 's3')
 
+def generate_unique_file_name(file_name: str) -> str:
+    '''Generate a unique file name based on datetime.now()'''
+    splt = file_name.split('.')
+    print(datetime.now())
+    return '.'.join(splt[:-1]) + str(datetime.now()) + '.' + splt[-1]
 
 def is_bucket(client: s3_client, bucket_name: str) -> bool:
     '''Return true if bucket_name exists, else false.'''
@@ -48,7 +54,13 @@ def write_file_to_bucket(client: s3_client, file_name: str, bucket_name: str, ke
     client.upload_file(file_name, bucket_name, key)
 
 
+def load_to_s3(config: dict) -> None:
+    '''load a file specified in the config to an s3 bucket.'''
+    s3 = get_s3_client(config)
+    file_name = generate_unique_file_name(config['FILE_NAME'])
+    write_file_to_bucket(s3, config['FILE_NAME'], config['BUCKET'], file_name)
+
 if __name__ == '__main__':
     load_dotenv()
-    s3 = get_s3_client(CONFIG)
-    write_file_to_bucket(s3, 'test_file.parquet', CONFIG['BUCKET'], 'test_dir/test_file.parquet')
+    # load_to_s3(CONFIG)
+    print(generate_unique_file_name('sdfsl.csv'))
