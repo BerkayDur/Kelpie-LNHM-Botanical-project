@@ -1,4 +1,4 @@
-from extract import get_data, fetch_data
+from extract import get_data, fetch_data, extract_data
 from unittest.mock import patch, MagicMock
 
 
@@ -19,7 +19,7 @@ def test_get_data_success(mock_get):
 @patch('extract.get_data')
 @patch('extract.Pool')
 def test_fetch_data_success(mock_Pool, mock_get_data):
-    fetch_data()
+    fetch_data(51)
     assert mock_Pool.return_value.__enter__.return_value.imap.call_count == 1
     assert mock_Pool.return_value.__enter__.return_value.imap.call_args[0][1] == list(
         range(0, 51))
@@ -28,4 +28,5 @@ def test_fetch_data_success(mock_Pool, mock_get_data):
 
 @patch('extract.fetch_data')
 def test_main(mock_fetch_data):
-    mock_fetch_data.assert_called_once
+    extract_data(51)
+    mock_fetch_data.assert_called_once()

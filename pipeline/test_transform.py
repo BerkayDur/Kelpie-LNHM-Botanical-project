@@ -1,4 +1,4 @@
-from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data, convert_to_dataframe, main, clean_data
+from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data, convert_to_dataframe, transform_data, clean_data
 import pytest
 import pandas as pd
 from unittest.mock import patch
@@ -232,7 +232,7 @@ def test_convert_to_dataframe():
     assert actual_columns == expected_columns
 
 def test_main(example_valid_data):
-    dim_plant, dim_botanist, fact_plant_reading = main([example_valid_data])
+    dim_plant, dim_botanist, fact_plant_reading = transform_data([example_valid_data])
 
     assert isinstance(
             dim_plant, pd.DataFrame)
