@@ -1,6 +1,8 @@
 pylint
 pytest
-pymssql
+pmmsql
 python-dotenv
 pyarrow
 pandas
+boto3-stubs[s3]
+mypy-boto3
