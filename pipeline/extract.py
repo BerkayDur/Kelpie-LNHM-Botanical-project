@@ -2,7 +2,6 @@
 from multiprocessing import Pool
 import requests
 
-
 API_URL = 'https://data-eng-plants-api.herokuapp.com/plants/'
 NUMBER_OF_PLANTS = 52
 
