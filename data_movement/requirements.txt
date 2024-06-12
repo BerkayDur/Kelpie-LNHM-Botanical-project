@@ -1,2 +1,6 @@
-pytest
 pylint
+pytest
+pymssql
+python-dotenv
+pyarrow
+pandas
