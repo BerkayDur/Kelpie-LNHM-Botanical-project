@@ -4,8 +4,12 @@ rootdir: /home/runner/work/Kelpie-LNHM-Botanical-project/Kelpie-LNHM-Botanical-p
 plugins: cov-5.0.0
 collected 74 items
 
+<<<<<<< HEAD
 data_movement/test_extract_from_db.py ......................             [ 29%]
 pipeline/test_extract.py .......                                         [ 39%]
 pipeline/test_transform.py ............................................. [100%]
 
 ============================== 74 passed in 0.55s ==============================
+=======
+============================ no tests ran in 0.01s =============================
+>>>>>>> 8284ea1268683d8551bb540e1f62ed71918ea85b

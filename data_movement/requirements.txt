@@ -1,8 +1,12 @@
 pylint
 pytest
+<<<<<<< HEAD
 pmmsql
 python-dotenv
 pyarrow
 pandas
+=======
+pylint
+>>>>>>> 8284ea1268683d8551bb540e1f62ed71918ea85b
 boto3-stubs[s3]
 mypy-boto3
