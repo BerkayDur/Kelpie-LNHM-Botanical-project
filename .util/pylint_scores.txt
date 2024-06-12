@@ -1,0 +1,17 @@
+************* Module load
+data_movement/load.py:20:0: C0301: Line too long (116/100) (line-too-long)
+data_movement/load.py:39:0: C0304: Final newline missing (missing-final-newline)
+data_movement/load.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+data_movement/load.py:1:0: E0401: Unable to import 'mypy_boto3' (import-error)
+data_movement/load.py:6:0: E0401: Unable to import 'mypy_boto3_s3.client' (import-error)
+data_movement/load.py:19:0: C0116: Missing function or method docstring (missing-function-docstring)
+data_movement/load.py:20:62: W0212: Access to a protected member _service_model of a client class (protected-access)
+data_movement/load.py:31:0: C0116: Missing function or method docstring (missing-function-docstring)
+data_movement/load.py:36:10: W0212: Access to a protected member _service_model of a client class (protected-access)
+data_movement/load.py:4:0: C0412: Imports from package botocore are not grouped (ungrouped-imports)
+data_movement/load.py:1:0: W0611: Unused import mypy_boto3 (unused-import)
+data_movement/load.py:6:0: W0611: Unused mypy_boto3_s3.client imported as s3_client (unused-import)
+
+-----------------------------------
+Your code has been rated at 0.91/10
+
