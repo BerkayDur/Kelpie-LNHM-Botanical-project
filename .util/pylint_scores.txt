@@ -1,36 +1,24 @@
 ************* Module load
-pipeline/load.py:35:0: C0301: Line too long (123/100) (line-too-long)
-pipeline/load.py:37:0: C0301: Line too long (114/100) (line-too-long)
-pipeline/load.py:37:0: C0301: Line too long (114/100) (line-too-long)
-pipeline/load.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-pipeline/load.py:3:0: E0401: Unable to import 'pymssql' (import-error)
-pipeline/load.py:9:15: W0621: Redefining name 'conn' from outer scope (line 44) (redefined-outer-name)
-pipeline/load.py:17:4: W0621: Redefining name 'conn' from outer scope (line 44) (redefined-outer-name)
-pipeline/load.py:27:22: W0621: Redefining name 'conn' from outer scope (line 44) (redefined-outer-name)
-pipeline/load.py:29:50: E1101: Module 'transform' has no 'main' member (no-member)
-pipeline/load.py:30:8: E1101: Module 'extract' has no 'main' member (no-member)
-pipeline/load.py:29:4: W0612: Unused variable 'dim_plant' (unused-variable)
-pipeline/load.py:29:15: W0612: Unused variable 'dim_botanist' (unused-variable)
+pipeline/load.py:4:0: E0401: Unable to import 'pymssql' (import-error)
 
 -----------------------------------
-Your code has been rated at 0.00/10
+Your code has been rated at 7.50/10
 
 ************* Module transform
-pipeline/transform.py:3:14: C0303: Trailing whitespace (trailing-whitespace)
-pipeline/transform.py:113:0: C0301: Line too long (107/100) (line-too-long)
-pipeline/transform.py:15:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+pipeline/transform.py:114:0: C0301: Line too long (103/100) (line-too-long)
+pipeline/transform.py:13:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
 pipeline/transform.py:90:0: C0116: Missing function or method docstring (missing-function-docstring)
 pipeline/transform.py:98:0: C0116: Missing function or method docstring (missing-function-docstring)
-pipeline/transform.py:123:4: W0621: Redefining name 'plant' from outer scope (line 166) (redefined-outer-name)
-pipeline/transform.py:124:4: W0621: Redefining name 'botanist' from outer scope (line 166) (redefined-outer-name)
-pipeline/transform.py:125:4: W0621: Redefining name 'plant_reading' from outer scope (line 166) (redefined-outer-name)
-pipeline/transform.py:157:4: W0621: Redefining name 'plant' from outer scope (line 166) (redefined-outer-name)
-pipeline/transform.py:157:11: W0621: Redefining name 'botanist' from outer scope (line 166) (redefined-outer-name)
-pipeline/transform.py:157:21: W0621: Redefining name 'plant_reading' from outer scope (line 166) (redefined-outer-name)
+pipeline/transform.py:125:4: W0621: Redefining name 'plant' from outer scope (line 170) (redefined-outer-name)
+pipeline/transform.py:126:4: W0621: Redefining name 'botanist' from outer scope (line 170) (redefined-outer-name)
+pipeline/transform.py:127:4: W0621: Redefining name 'plant_reading' from outer scope (line 170) (redefined-outer-name)
+pipeline/transform.py:160:4: W0621: Redefining name 'plant' from outer scope (line 170) (redefined-outer-name)
+pipeline/transform.py:160:11: W0621: Redefining name 'botanist' from outer scope (line 170) (redefined-outer-name)
+pipeline/transform.py:160:21: W0621: Redefining name 'plant_reading' from outer scope (line 170) (redefined-outer-name)
 pipeline/transform.py:4:0: C0411: standard import "datetime.datetime" should be placed before third party imports "pandas", "extract" (wrong-import-order)
 
 -----------------------------------
-Your code has been rated at 8.52/10
+Your code has been rated at 8.64/10
 
 ************* Module extract
 pipeline/extract.py:27:0: C0303: Trailing whitespace (trailing-whitespace)
