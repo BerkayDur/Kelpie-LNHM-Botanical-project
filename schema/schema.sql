@@ -17,7 +17,7 @@ GO
 
 CREATE TABLE alpha.DIM_plant (
     plant_id INT,
-    plant_name TEXT,
+    plant_name NVARCHAR(50),
     scientific_name TEXT,
     origin_longitude DECIMAL(9,6),
     origin_latitude DECIMAL(8,6),
@@ -100,6 +100,3 @@ VALUES
 ('Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'),
 ('Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948');
 GO
-
-
-
