@@ -24,7 +24,7 @@ def get_data(i: int) -> dict:
     except requests.exceptions.RequestException:
         return {'error': "RequestException"}
 
-    
+
 def fetch_data(number_of_plants: int) -> list[dict]:
     """
     Fetches data for multiple indices concurrently using a pool of processes.
@@ -35,11 +35,8 @@ def fetch_data(number_of_plants: int) -> list[dict]:
     return data
 
 
-def extract_data(number_of_plants: int) -> list[dict]:
+def extract_data(number_of_plants: int = NUMBER_OF_PLANTS) -> list[dict]:
     """
     Main
     """
     return fetch_data(number_of_plants)
-
-if __name__ == "__main__":
-    extract_data(NUMBER_OF_PLANTS)
