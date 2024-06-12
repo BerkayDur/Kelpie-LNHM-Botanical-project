@@ -117,7 +117,7 @@ def identify_datetime_format(date_string: str) -> str:
     raise ValueError("Unknown datetime format")
 
 
-def convert_to_datetime(date_string) -> None | datetime:
+def convert_to_datetime(date_string: str) -> None | datetime:
     """
     Converts a string into datetime
     """
@@ -180,7 +180,7 @@ def clean_data(df: pd.DataFrame, threshold: int = 2) -> pd.DataFrame:
     return df
 
 
-def transform_data(readings) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def transform_data(readings: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Main
     """
