@@ -1,6 +1,6 @@
 """Transform script"""
 import pandas as pd
-import extract 
+import extract
 from datetime import datetime
 
 LATITUDE_INDEX = 0
@@ -8,8 +8,6 @@ LONGITUDE_INDEX = 1
 ORIGIN_TOWN_INDEX = 2
 ORIGIN_COUNTRY_CODE_INDEX = 3
 ORIGIN_REGION_INDEX = 4
-
-
 
 
 def get_botanist_detail(reading: dict, botanist_detail: str) -> str | None:
@@ -20,6 +18,7 @@ def get_botanist_detail(reading: dict, botanist_detail: str) -> str | None:
         raise TypeError('entries into a DataFrame must be of type dict')
     if 'botanist' in reading:
         return reading['botanist'].get(botanist_detail)
+
 
 def get_origin_detail(reading: dict, index: int) -> str | None:
     """
@@ -63,6 +62,7 @@ def get_details(reading: dict, detail: str) -> str | int | None:
     """
     return reading.get(detail)
 
+
 def botanist_details(reading: list[dict]) -> dict:
     """
     Returns a dataframe of botanist details
@@ -102,18 +102,20 @@ def convert_recording_time_to_datetime(date_string):
     date_time_obj = datetime.strptime(date_string, format_string)
     return date_time_obj
 
+
 def plant_readings(reading: list[dict]) -> dict:
     """
     Returns a dataframe of reading details
     """
     return {
-            'soil_moisture': get_details(reading, 'soil_moisture'),
-            'temperature': get_details(reading, 'temperature'),
-            'last_watered': convert_last_watered_to_datetime(get_details(reading, 'last_watered')),
-            'recording_taken': convert_recording_time_to_datetime(get_details(reading, 'recording_taken')),
-            'name': get_botanist_detail(reading, 'name'),
-            'plant_name': get_details(reading, 'name')
-        }
+        'soil_moisture': get_details(reading, 'soil_moisture'),
+        'temperature': get_details(reading, 'temperature'),
+        'last_watered': convert_last_watered_to_datetime(get_details(reading, 'last_watered')),
+        'recording_taken': convert_recording_time_to_datetime(get_details(reading, 'recording_taken')),
+        'name': get_botanist_detail(reading, 'name'),
+        'plant_name': get_details(reading, 'name')
+    }
+
 
 def group_data(readings: list[dict]) -> tuple[list, list, list]:
     """
@@ -150,6 +152,7 @@ def clean_data(df: pd.DataFrame, threshold: int = 2) -> pd.DataFrame:
     df = df.dropna(thresh=threshold)
     return df
 
+
 def transform_data(readings) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Main
@@ -161,6 +164,7 @@ def transform_data(readings) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     fact_plant_reading = convert_to_dataframe(plant_reading)
 
     return clean_data(dim_plant), clean_data(dim_botanist), clean_data(fact_plant_reading)
+
 
 if __name__ == "__main__":
     plant, botanist, plant_reading = transform_data(extract.extract_data(51))

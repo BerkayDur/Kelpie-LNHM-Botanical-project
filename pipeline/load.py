@@ -1,3 +1,4 @@
+"""takes cleaned readings data and loads it into database"""
 from os import environ as ENV
 from dotenv import load_dotenv
 import pymssql
@@ -6,9 +7,9 @@ import transform
 import extract
 
 
-def get_cursor(conn):
+def get_cursor(connect):
     """gets a cursor given a connection"""
-    return conn.cursor()
+    return connect.cursor()
 
 
 def get_connection():
@@ -26,20 +27,22 @@ def get_connection():
 
 def upload_plant_data(conn):
     """Uploads plant readings to the database."""
-    dim_plant, dim_botanist, fact_plant_reading = transform.main(
-        extract.main())
-    print(fact_plant_reading.to_numpy().tolist())
+    _, _, fact_plant_reading = transform.transform_data(
+        extract.extract_data(51))
     cursor = get_cursor(conn)
 
     cursor.executemany(
-        """insert into alpha.fact_plant_reading (soil_moisture, temperature, last_watered, taken_at, botanist_id, plant_id)
-        VALUES (%s, %s, %s, %s,(SELECT botanist_id FROM alpha.dim_botanist WHERE name=%s),
-        (SELECT plant_id FROM alpha.dim_plant WHERE plant_name = %s));""", fact_plant_reading.to_numpy().tolist())
+        """insert into alpha.fact_plant_reading
+        (soil_moisture, temperature, last_watered, taken_at, botanist_id, plant_id)
+        VALUES (%s, %s, %s, %s,
+        (SELECT TOP 1 botanist_id FROM alpha.dim_botanist WHERE name=%s),
+        (SELECT TOP 1 plant_id FROM alpha.dim_plant WHERE plant_name = %s))
+        ;""", fact_plant_reading.to_numpy().tolist())
     conn.commit()
 
     cursor.close()
 
 
 if __name__ == "__main__":
-    conn = get_connection()
-    upload_plant_data(conn)
+    connection = get_connection()
+    upload_plant_data(connection)
