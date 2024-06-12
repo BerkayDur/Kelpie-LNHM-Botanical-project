@@ -1,4 +1,5 @@
 """takes cleaned readings data and loads it into database"""
+# pylint: disable=no-member
 from os import environ as ENV
 from dotenv import load_dotenv
 import pymssql
