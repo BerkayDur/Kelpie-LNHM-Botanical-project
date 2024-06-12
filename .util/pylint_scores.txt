@@ -1,17 +1,14 @@
 ************* Module load
-data_movement/load.py:20:0: C0301: Line too long (116/100) (line-too-long)
-data_movement/load.py:39:0: C0304: Final newline missing (missing-final-newline)
+data_movement/load.py:43:0: C0303: Trailing whitespace (trailing-whitespace)
+data_movement/load.py:49:0: C0304: Final newline missing (missing-final-newline)
 data_movement/load.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-data_movement/load.py:1:0: E0401: Unable to import 'mypy_boto3' (import-error)
-data_movement/load.py:6:0: E0401: Unable to import 'mypy_boto3_s3.client' (import-error)
-data_movement/load.py:19:0: C0116: Missing function or method docstring (missing-function-docstring)
-data_movement/load.py:20:62: W0212: Access to a protected member _service_model of a client class (protected-access)
-data_movement/load.py:31:0: C0116: Missing function or method docstring (missing-function-docstring)
-data_movement/load.py:36:10: W0212: Access to a protected member _service_model of a client class (protected-access)
-data_movement/load.py:4:0: C0412: Imports from package botocore are not grouped (ungrouped-imports)
-data_movement/load.py:1:0: W0611: Unused import mypy_boto3 (unused-import)
-data_movement/load.py:6:0: W0611: Unused mypy_boto3_s3.client imported as s3_client (unused-import)
+data_movement/load.py:24:16: W0212: Access to a protected member _service_model of a client class (protected-access)
+data_movement/load.py:38:0: C0116: Missing function or method docstring (missing-function-docstring)
+data_movement/load.py:39:4: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
+data_movement/load.py:38:41: W0613: Unused argument 'bucket_name' (unused-argument)
+data_movement/load.py:38:59: W0613: Unused argument 'key' (unused-argument)
+data_movement/load.py:6:0: C0412: Imports from package botocore are not grouped (ungrouped-imports)
 
 -----------------------------------
-Your code has been rated at 0.91/10
+Your code has been rated at 7.00/10
 
