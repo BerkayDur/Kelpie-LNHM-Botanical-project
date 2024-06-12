@@ -1,7 +1,10 @@
 ============================= test session starts ==============================
 platform linux -- Python 3.12.3, pytest-8.2.2, pluggy-1.5.0
 rootdir: /home/runner/work/Kelpie-LNHM-Botanical-project/Kelpie-LNHM-Botanical-project
-collected 30 items / 1 error
+collected 31 items
 
-!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-=============================== 1 error in 0.56s ===============================
+pipeline/test_extract.py ...                                             [  9%]
+pipeline/test_load.py .                                                  [ 12%]
+pipeline/test_transform.py .....................F.F...                   [100%]
+
+========================= 2 failed, 29 passed in 0.47s =========================
