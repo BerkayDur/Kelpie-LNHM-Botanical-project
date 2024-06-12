@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import pymssql
 
 import transform
+import extract
 
 
 def get_cursor(conn):
@@ -25,14 +26,15 @@ def get_connection():
 
 def upload_plant_data(conn):
     """Uploads plant readings to the database."""
-    dim_plant, dim_botanist, fact_plant_reading = transform.main()
-    print(fact_plant_reading)
+    dim_plant, dim_botanist, fact_plant_reading = transform.main(
+        extract.main())
+    print(fact_plant_reading.to_numpy().tolist())
     cursor = get_cursor(conn)
 
     cursor.executemany(
-        """insert into alpha.fact_plant_reading (soil_moisture, temperature, taken_at, watered_at, plant_id, botanist_id)
-        VALUES (%s, %s, %s, %s, (SELECT plant_id FROM alpha.dim_plant WHERE plant_name = %s)
-    , (SELECT botanist_id FROM alpha.dim_botanist WHERE botanist_name=%s));""", fact_plant_reading)
+        """insert into alpha.fact_plant_reading (soil_moisture, temperature, last_watered, taken_at, botanist_id, plant_id)
+        VALUES (%s, %s, %s, %s,(SELECT botanist_id FROM alpha.dim_botanist WHERE name=%s),
+        (SELECT plant_id FROM alpha.dim_plant WHERE plant_name = %s));""", fact_plant_reading.to_numpy().tolist())
     conn.commit()
 
     cursor.close()
