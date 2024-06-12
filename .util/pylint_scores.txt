@@ -6,19 +6,9 @@ Your code has been rated at 10.00/10
 ------------------------------------
 Your code has been rated at 10.00/10
 
-************* Module handler
-pipeline/handler.py:6:8: C0303: Trailing whitespace (trailing-whitespace)
-pipeline/handler.py:19:0: C0303: Trailing whitespace (trailing-whitespace)
-pipeline/handler.py:21:0: C0304: Final newline missing (missing-final-newline)
-pipeline/handler.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-pipeline/handler.py:5:0: C0116: Missing function or method docstring (missing-function-docstring)
-pipeline/handler.py:14:11: W0718: Catching too general exception Exception (broad-exception-caught)
-pipeline/handler.py:5:12: W0613: Unused argument 'event' (unused-argument)
-pipeline/handler.py:5:24: W0613: Unused argument 'context' (unused-argument)
-pipeline/handler.py:2:0: C0411: standard import "os.environ" should be placed before third party import "dotenv.load_dotenv" (wrong-import-order)
 
------------------------------------
-Your code has been rated at 3.08/10
+------------------------------------
+Your code has been rated at 10.00/10
 
 
 ------------------------------------
