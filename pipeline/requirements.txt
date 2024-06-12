@@ -6,4 +6,4 @@ aiohttp
 aiodns
 pandas
 python-dotenv
-pyodbc
+pymssql
