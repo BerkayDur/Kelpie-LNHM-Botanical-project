@@ -1,3 +1,5 @@
+'''Gets the file from a local repo and writes '''
+
 from os import path
 from os import environ as CONFIG
 from dotenv import load_dotenv
@@ -18,7 +20,7 @@ def get_s3_client(config: dict) -> s3_client:
         aws_secret_access_key = secret_access_key
     )
 
-def is_s3_bucket(client: s3_client) -> bool:
+def is_s3(client: s3_client) -> bool:
     '''Return true if s3 bucket else return false.'''
     return (isinstance(client, botocore.client.BaseClient)
             and client._service_model.service_name == 's3')
@@ -26,7 +28,7 @@ def is_s3_bucket(client: s3_client) -> bool:
 
 def is_bucket(client: s3_client, bucket_name: str) -> bool:
     '''Return true if bucket_name exists, else false.'''
-    if not is_s3_bucket(client):
+    if not is_s3(client):
         raise TypeError('client must be a boto3 client for service S3.')
     try:
         client.head_bucket(Bucket=bucket_name)
@@ -36,6 +38,9 @@ def is_bucket(client: s3_client, bucket_name: str) -> bool:
 
 
 def write_file_to_bucket(client: s3_client, file_name: str, bucket_name: str, key: str) -> None:
+    '''Write a file to bucket.'''
+    if not is_s3(client):
+        raise TypeError('client must be a boto3 client for service S3.')
     if not path.isfile(file_name):
         raise ValueError(f'file {file_name} does not exist!')
     if not is_bucket(client, bucket_name):
