@@ -1,5 +1,6 @@
-from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data, convert_to_dataframe, transform_data, clean_data
+from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data, convert_to_dataframe, transform_data, clean_data, convert_to_datetime, identify_datetime_format
 import pytest
+import datetime
 import pandas as pd
 from unittest.mock import patch
 
@@ -63,8 +64,8 @@ def example_expected_output():
         [{
             'soil_moisture': 15.478956774353875,
             'temperature': 11.483367104821191,
-            'last_watered': 'Mon, 10 Jun 2024 13:23:01 GMT',
-            'recording_taken': '2024-06-11 13:00:09',
+            'last_watered': datetime.datetime(2024, 6, 10, 13, 23, 1),
+            'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9),
             'name':  'Eliza Andrews',
             'plant_name': 'Bird of paradise'
         }]
@@ -162,6 +163,30 @@ def test_botanist_missing_details(example_invalid_data):
         }
 
 
+
+def test_identify_datetime_format():
+    assert identify_datetime_format(
+        "2024-06-12 15:45:30") == "%Y-%m-%d %H:%M:%S"
+
+
+def test_identify_datetime_format_unknown_format():
+    with pytest.raises(ValueError):
+        identify_datetime_format("12/06/2024 15:45:30")
+
+
+def test_convert_to_datetime_valid_format_1():
+    assert convert_to_datetime(
+        "Wed, 12 Jun 2024 15:45:30 GMT") == datetime.datetime(2024, 6, 12, 15, 45, 30)
+
+
+def test_convert_to_datetime_invalid_format():
+    with pytest.raises(ValueError):
+        convert_to_datetime("12/06/2024 15:45:30") == None
+
+
+def test_convert_to_datetime_non_string_input():
+    assert convert_to_datetime(20240612) == None
+
 def test_plant_details(example_valid_data):
     assert plant_details(example_valid_data) == {
         'plant_id': 8,
@@ -192,8 +217,8 @@ def test_plant_readings(example_valid_data):
     assert plant_readings(example_valid_data) == {
         'soil_moisture': 15.478956774353875,
         'temperature': 11.483367104821191,
-        'last_watered': 'Mon, 10 Jun 2024 13:23:01 GMT',
-        'recording_taken': '2024-06-11 13:00:09',
+        'last_watered': datetime.datetime(2024, 6, 10, 13, 23, 1),
+        'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9),
         'name':  'Eliza Andrews',
         'plant_name': 'Bird of paradise'
         }

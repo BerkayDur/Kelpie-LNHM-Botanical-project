@@ -2,6 +2,7 @@
 import pandas as pd
 import extract 
 from datetime import datetime
+import re
 
 LATITUDE_INDEX = 0
 LONGITUDE_INDEX = 1
@@ -87,20 +88,33 @@ def plant_details(reading: list[dict]) -> dict:
             'origin_region': get_origin_region(reading)}
 
 
-def convert_last_watered_to_datetime(date_string):
+
+def identify_datetime_format(date_string: str) -> str:
+    """
+    Function to match the string date format to get the 
+    desired datetime format
+    """
+    formats = {
+        "%a, %d %b %Y %H:%M:%S %Z": r"^[A-Za-z]{3}, \d{2} [A-Za-z]{3} \d{4} \d{2}:\d{2}:\d{2} [A-Z]{3}$",
+        "%Y-%m-%d %H:%M:%S": r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$"
+    }
+    
+    for format_string, pattern in formats.items():
+        if re.match(pattern, date_string):
+            return format_string
+    
+    raise ValueError("Unknown datetime format")
+
+def convert_to_datetime(date_string) -> None | datetime:
+    """
+    Converts a string into datetime
+    """
     if not isinstance(date_string, str):
         return None
-    format_string = "%a, %d %b %Y %H:%M:%S %Z"
+    format_string = identify_datetime_format(date_string)
     date_time_obj = datetime.strptime(date_string, format_string)
     return date_time_obj
-
-
-def convert_recording_time_to_datetime(date_string):
-    if not isinstance(date_string, str):
-        return None
-    format_string = "%Y-%m-%d %H:%M:%S"
-    date_time_obj = datetime.strptime(date_string, format_string)
-    return date_time_obj
+    
 
 def plant_readings(reading: list[dict]) -> dict:
     """
@@ -109,8 +123,8 @@ def plant_readings(reading: list[dict]) -> dict:
     return {
             'soil_moisture': get_details(reading, 'soil_moisture'),
             'temperature': get_details(reading, 'temperature'),
-            'last_watered': convert_last_watered_to_datetime(get_details(reading, 'last_watered')),
-            'recording_taken': convert_recording_time_to_datetime(get_details(reading, 'recording_taken')),
+            'last_watered': convert_to_datetime(get_details(reading, 'last_watered')),
+            'recording_taken': convert_to_datetime(get_details(reading, 'recording_taken')),
             'name': get_botanist_detail(reading, 'name'),
             'plant_name': get_details(reading, 'name')
         }
