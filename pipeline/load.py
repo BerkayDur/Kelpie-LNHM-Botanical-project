@@ -12,7 +12,6 @@ def get_cursor(connect):
 
 def get_connection():
     """gets a connection"""
-    load_dotenv()
     conn = pymssql.connect(
         host=ENV["DB_HOST"],
         port=ENV["DB_PORT"],
@@ -41,5 +40,6 @@ def upload_plant_data(conn, fact_plant_readings):
 
 def load_data(data):
     """main function calling upload data func"""
+    load_dotenv()
     connection = get_connection()
     upload_plant_data(connection, data)
