@@ -1,7 +1,5 @@
 from os import environ as ENV
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from sqlalchemy.engine import URL
 import pymssql
 
 import transform
@@ -26,12 +24,10 @@ def get_connection():
 
 
 def upload_plant_data(conn):
-    """Uploads plant data to the database."""
+    """Uploads plant readings to the database."""
     dim_plant, dim_botanist, fact_plant_reading = transform.main()
+    print(fact_plant_reading)
     cursor = get_cursor(conn)
-
-    dim_botanist_list = [['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], [None, None, None], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], [
-        'Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], [None, None, None], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'], ['Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948'], ['Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992']]
 
     cursor.executemany(
         """insert into alpha.fact_plant_reading (soil_moisture, temperature, taken_at, watered_at, plant_id, botanist_id)
