@@ -2,7 +2,7 @@
 pipeline/load.py:5:0: E0401: Unable to import 'pymssql' (import-error)
 
 -----------------------------------
-Your code has been rated at 7.50/10
+Your code has been rated at 7.06/10
 
 ************* Module transform
 pipeline/transform.py:114:0: C0301: Line too long (103/100) (line-too-long)
