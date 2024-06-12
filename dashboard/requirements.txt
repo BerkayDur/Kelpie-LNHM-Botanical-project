@@ -2,4 +2,5 @@ pytest
 pylint
 altair
 streamlit
+python-dotenv
 pandas
