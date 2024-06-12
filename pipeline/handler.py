@@ -1,9 +1,15 @@
-from dotenv import load_dotenv
+"""Lambda Handler"""
+
 from os import environ as ENV
+from dotenv import load_dotenv
 import main
 
-def handler(event=None, context=None):
-    try:     
+
+def handler(event=None, context=None) -> dict:  # pylint: disable=unused-argument
+    """
+    Handler function required for lambda
+    """
+    try:
         load_dotenv()
         num_plants = int(ENV["NUM_PLANTS"])
         main.run_pipeline(num_plants)
@@ -11,11 +17,11 @@ def handler(event=None, context=None):
         return {
             'status': 'Success!!!!!!!!!'
         }
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         return {
             'status': 'failed :(',
-            'reason': str(e)
+            'reason': str(e) 
         }
-    
+
 if __name__ == "__main__":
     print(handler())
