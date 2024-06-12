@@ -65,13 +65,13 @@ def plant_details(reading: list[dict]) -> dict:
     Returns a dataframe of plant details
     """
     return {'plant_id': get_details(reading, 'plant_id'),
-                    'plant_name': get_details(reading, 'name'),
-                    'scientific_name': get_scientific_name(reading),
-                    'origin_longitude': get_origin_detail(reading, 1),
-                    'origin_latitude': get_origin_detail(reading, 0),
-                    'origin_town': get_origin_detail(reading, 2),
-                    'origin_country_code': get_origin_detail(reading, 3),
-                    'origin_region': get_origin_region(reading)}
+            'plant_name': get_details(reading, 'name'),
+            'scientific_name': get_scientific_name(reading),
+            'origin_longitude': get_origin_detail(reading, 1),
+            'origin_latitude': get_origin_detail(reading, 0),
+            'origin_town': get_origin_detail(reading, 2),
+            'origin_country_code': get_origin_detail(reading, 3),
+            'origin_region': get_origin_region(reading)}
 
 
 def plant_readings(reading: list[dict]) -> dict:
