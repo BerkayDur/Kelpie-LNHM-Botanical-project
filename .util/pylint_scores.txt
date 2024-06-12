@@ -6,24 +6,21 @@ Your code has been rated at 10.00/10
 ------------------------------------
 Your code has been rated at 10.00/10
 
-************* Module extract_from_db
-data_movement/extract_from_db.py:13:0: E0401: Unable to import 'dotenv' (import-error)
-data_movement/extract_from_db.py:14:0: E0401: Unable to import 'pymssql' (import-error)
+************* Module extract_load_pipeline
+data_movement/extract_load_pipeline.py:13:0: C0304: Final newline missing (missing-final-newline)
 
 -----------------------------------
-Your code has been rated at 7.56/10
+Your code has been rated at 8.75/10
+
+
+------------------------------------
+Your code has been rated at 10.00/10
 
 ************* Module load_to_s3
-data_movement/load_to_s3.py:54:0: C0304: Final newline missing (missing-final-newline)
-data_movement/load_to_s3.py:5:0: E0401: Unable to import 'dotenv' (import-error)
-data_movement/load_to_s3.py:6:0: E0401: Unable to import 'botocore' (import-error)
-data_movement/load_to_s3.py:7:0: E0401: Unable to import 'boto3' (import-error)
-data_movement/load_to_s3.py:8:0: E0401: Unable to import 'botocore.client' (import-error)
-data_movement/load_to_s3.py:9:0: E0401: Unable to import 'botocore.exceptions' (import-error)
-data_movement/load_to_s3.py:10:0: E0401: Unable to import 'mypy_boto3_s3.client' (import-error)
-data_movement/load_to_s3.py:26:16: W0212: Access to a protected member _service_model of a client class (protected-access)
-data_movement/load_to_s3.py:8:0: C0412: Imports from package botocore are not grouped (ungrouped-imports)
+data_movement/load_to_s3.py:66:0: C0304: Final newline missing (missing-final-newline)
+data_movement/load_to_s3.py:27:16: W0212: Access to a protected member _service_model of a client class (protected-access)
+data_movement/load_to_s3.py:4:0: W0611: Unused environ imported from os as CONFIG (unused-import)
 
 -----------------------------------
-Your code has been rated at 0.29/10
+Your code has been rated at 9.29/10
 
