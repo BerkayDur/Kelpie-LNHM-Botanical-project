@@ -72,43 +72,15 @@ def get_details(reading: dict, detail: str) -> str | int | None:
     return reading.get(detail)
 
 
-def botanist_details(reading: list[dict]) -> dict:
-    """
-    Returns a dataframe of botanist details
-    """
-    if not isinstance(reading, dict):
-        raise TypeError('entries into a DataFrame must be of type dict')
-    return {'name': get_botanist_detail(reading, 'name'),
-            'email': get_botanist_detail(reading, 'email'),
-            'phone_no': get_botanist_detail(reading, 'phone')
-            }
-
-
-def plant_details(reading: list[dict]) -> dict:
-    """
-    Returns a dataframe of plant details
-    """
-    if not isinstance(reading, dict):
-        raise TypeError('entries into a DataFrame must be of type dict')
-    return {'plant_id': get_details(reading, 'plant_id'),
-            'plant_name': get_details(reading, 'name'),
-            'scientific_name': get_scientific_name(reading),
-            'origin_longitude': get_origin_detail(reading, LONGITUDE_INDEX),
-            'origin_latitude': get_origin_detail(reading, LATITUDE_INDEX),
-            'origin_town': get_origin_detail(reading, ORIGIN_TOWN_INDEX),
-            'origin_country_code': get_origin_detail(reading, ORIGIN_COUNTRY_CODE_INDEX),
-            'origin_region': get_origin_region(reading)}
-
-
 def identify_datetime_format(date_string: str) -> str:
     """
     Function to match the string date format to get the 
     desired datetime format
     """
     formats = {
-        "%a, %d %b %Y %H:%M:%S %Z": 
+        "%a, %d %b %Y %H:%M:%S %Z":
         r"^[A-Za-z]{3}, \d{2} [A-Za-z]{3} \d{4} \d{2}:\d{2}:\d{2} [A-Z]{3}$",
-        "%Y-%m-%d %H:%M:%S": 
+        "%Y-%m-%d %H:%M:%S":
         r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$"
     }
     for format_string, pattern in formats.items():
@@ -128,7 +100,35 @@ def convert_to_datetime(date_string: str) -> None | datetime:
     return date_time_obj
 
 
-def plant_readings(reading: list[dict]) -> dict:
+def botanist_details(reading: dict) -> dict:
+    """
+    Returns a dataframe of botanist details
+    """
+    if not isinstance(reading, dict):
+        raise TypeError('entries into a DataFrame must be of type dict')
+    return {'name': get_botanist_detail(reading, 'name'),
+            'email': get_botanist_detail(reading, 'email'),
+            'phone_no': get_botanist_detail(reading, 'phone')
+            }
+
+
+def plant_details(reading: dict) -> dict:
+    """
+    Returns a dataframe of plant details
+    """
+    if not isinstance(reading, dict):
+        raise TypeError('entries into a DataFrame must be of type dict')
+    return {'plant_id': get_details(reading, 'plant_id'),
+            'plant_name': get_details(reading, 'name'),
+            'scientific_name': get_scientific_name(reading),
+            'origin_longitude': get_origin_detail(reading, LONGITUDE_INDEX),
+            'origin_latitude': get_origin_detail(reading, LATITUDE_INDEX),
+            'origin_town': get_origin_detail(reading, ORIGIN_TOWN_INDEX),
+            'origin_country_code': get_origin_detail(reading, ORIGIN_COUNTRY_CODE_INDEX),
+            'origin_region': get_origin_region(reading)}
+
+
+def plant_readings(reading: dict) -> dict:
     """
     Returns a dataframe of reading details
     """
@@ -149,6 +149,11 @@ def group_data(readings: list[dict]) -> tuple[list, list, list]:
     Iterates through the readings and organises different parameters
     into the relevant list
     """
+    if not isinstance(readings, list):
+        raise TypeError('entries into a DataFrame must be of type dict')
+    if not all(isinstance(value, dict) for value in readings):
+        raise TypeError('entries into a DataFrame must be of type dict')
+
     plant = []
     botanist = []
     plant_reading = []

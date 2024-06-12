@@ -91,8 +91,19 @@ def test_get_botanist_missing_detail(example_invalid_data):
         example_invalid_data, 'name') == None
 
 
+def test_get_botanist_detail_invalid_type_dict():
+    with pytest.raises(TypeError):
+        get_botanist_detail(['test', 'test'], 'name')
+
+
+def test_get_botanist_detail_invalid_type_str(example_valid_data):
+    with pytest.raises(TypeError):
+        get_botanist_detail(example_valid_data, ['name'])
+
+
 def test_get_origin_latitude(example_valid_data):
     assert get_origin_detail(example_valid_data, 0) == "5.27247"
+
 
 def test_get_origin_longitude(example_valid_data):
     assert get_origin_detail(example_valid_data, 1) == "-3.59625"
@@ -109,6 +120,16 @@ def test_get_origin_missing_values(example_invalid_data):
     assert get_origin_detail(example_invalid_data, 3) == None
 
 
+def test_get_origin_detail_invalid_type_int(example_valid_data):
+    with pytest.raises(TypeError):
+        get_origin_detail(example_valid_data, 'name')
+
+
+def test_get_origin_detail_invalid_type_dict(example_valid_data):
+    with pytest.raises(TypeError):
+        get_origin_detail([example_valid_data], 3)
+
+
 def test_get_scientific_name(example_valid_data):
     assert get_scientific_name(
         example_valid_data) == "Heliconia schiedeana 'Fire and Ice'"
@@ -118,8 +139,17 @@ def test_get_scientific_name_missing(example_invalid_data):
     assert get_scientific_name(example_invalid_data) == None
 
 
+def test_get_scientific_name_invalid_type_dict(example_valid_data):
+    with pytest.raises(TypeError):
+        get_scientific_name([example_valid_data])
+
 def test_get_origin_region(example_valid_data):
     assert get_origin_region(example_valid_data) == 'Africa'
+
+
+def test_get_origin_region_invalid_type_dict(example_valid_data):
+    with pytest.raises(TypeError):
+        get_origin_region([example_valid_data])
 
 
 def test_get_temperature(example_valid_data):
@@ -145,23 +175,16 @@ def test_get_recording_taken(example_valid_data):
 def test_get_detail_missing(example_invalid_data):
     assert get_details(example_invalid_data,
                        'recording_taken') == None
-    
+ 
 
-def test_botanist_details(example_valid_data):
-    assert botanist_details(example_valid_data) == {
-        'name': 'Eliza Andrews',
-        'email': 'eliza.andrews@lnhm.co.uk',
-        'phone_no': '(846)669-6651x75948'
-        }
+def test_get_details_invalid_type_dict(example_valid_data):
+    with pytest.raises(TypeError):
+        get_details([example_valid_data], 'name')
 
 
-def test_botanist_missing_details(example_invalid_data):
-    assert botanist_details(example_invalid_data) == {
-        'name': None,
-        'email': None,
-        'phone_no': None
-        }
-
+def test_get_details_invalid_type_str(example_valid_data):
+    with pytest.raises(TypeError):
+        get_details(example_valid_data, ['name'])
 
 
 def test_identify_datetime_format():
@@ -186,6 +209,47 @@ def test_convert_to_datetime_invalid_format():
 
 def test_convert_to_datetime_non_string_input():
     assert convert_to_datetime(20240612) == None
+
+
+def test_botanist_details(example_valid_data):
+    assert botanist_details(example_valid_data) == {
+        'name': 'Eliza Andrews',
+        'email': 'eliza.andrews@lnhm.co.uk',
+        'phone_no': '(846)669-6651x75948'
+        }
+
+
+def test_botanist_missing_details(example_invalid_data):
+    assert botanist_details(example_invalid_data) == {
+        'name': None,
+        'email': None,
+        'phone_no': None
+        }
+
+
+def test_botanist_details_invalid_type_dict(example_valid_data):
+    with pytest.raises(TypeError):
+        botanist_details([example_valid_data])
+
+
+def test_plant_details_invalid_type_dict(example_valid_data):
+    with pytest.raises(TypeError):
+        plant_details([example_valid_data])
+
+
+def test_plant_readings_invalid_type_dict(example_valid_data):
+    with pytest.raises(TypeError):
+        plant_readings([example_valid_data])
+
+
+def test_group_data_invalid_type_list():
+    with pytest.raises(TypeError):
+        plant_readings(['test', 1])
+
+
+def test_group_data_invalid_type_contents():
+    with pytest.raises(TypeError):
+        plant_readings([1, 2, 4])
 
 def test_plant_details(example_valid_data):
     assert plant_details(example_valid_data) == {
@@ -255,6 +319,8 @@ def test_convert_to_dataframe():
                         'last_watered', 'recording_taken']
     actual_columns = list(actual_df.columns)
     assert actual_columns == expected_columns
+
+
 
 def test_main(example_valid_data):
     dim_plant, dim_botanist, fact_plant_reading = transform_data([example_valid_data])
