@@ -2,14 +2,7 @@
 platform linux -- Python 3.12.3, pytest-8.2.2, pluggy-1.5.0
 rootdir: /home/runner/work/Kelpie-LNHM-Botanical-project/Kelpie-LNHM-Botanical-project
 plugins: cov-5.0.0
-collected 74 items
+collected 52 items / 1 error
 
-<<<<<<< HEAD
-data_movement/test_extract_from_db.py ......................             [ 29%]
-pipeline/test_extract.py .......                                         [ 39%]
-pipeline/test_transform.py ............................................. [100%]
-
-============================== 74 passed in 0.55s ==============================
-=======
-============================ no tests ran in 0.01s =============================
->>>>>>> 8284ea1268683d8551bb540e1f62ed71918ea85b
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+=============================== 1 error in 0.54s ===============================
