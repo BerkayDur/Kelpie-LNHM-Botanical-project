@@ -1,8 +1,11 @@
 ============================= test session starts ==============================
 platform linux -- Python 3.12.3, pytest-8.2.2, pluggy-1.5.0
 rootdir: /home/runner/work/Kelpie-LNHM-Botanical-project/Kelpie-LNHM-Botanical-project
-collected 22 items
+plugins: cov-5.0.0
+collected 52 items
 
-data_movement/test_extract.py ......................                     [100%]
+pipeline/test_extract.py .......                                         [ 13%]
+pipeline/test_transform.py ............................................. [100%]
 
-============================== 22 passed in 0.42s ==============================
+============================== 52 passed in 0.48s ==============================
+

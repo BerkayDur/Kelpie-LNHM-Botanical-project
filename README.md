@@ -1,4 +1,5 @@
-[![badge](./.github/badges/passed_percentage.svg)](./util/pytest_scores.json)
+[![badge](./.github/badges/passed_percentage.svg)](./.util/pytest_scores.json)
+[![badge](./.github/badges/avg_score.svg)](./.util/pylint_scores.json)
 
 # Kelpie-LNHM-Botanical-project
 
@@ -16,6 +17,7 @@ There are 3 folders for each stage of the project. To run each process locally, 
 
 - `python3 -m venv .venv`
 - `source .venv/bin/activate`
+- `pip install -r requirements.txt`
 - `python3 main.py`
 
 For each folder.
