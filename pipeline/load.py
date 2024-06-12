@@ -4,9 +4,6 @@ from os import environ as ENV
 from dotenv import load_dotenv
 import pymssql
 
-import transform
-import extract
-
 
 def get_cursor(connect):
     """gets a cursor given a connection"""
@@ -26,10 +23,8 @@ def get_connection():
     return conn
 
 
-def upload_plant_data(conn):
+def upload_plant_data(conn, fact_plant_readings):
     """Uploads plant readings to the database."""
-    _, _, fact_plant_reading = transform.transform_data(
-        extract.extract_data(51))
     cursor = get_cursor(conn)
 
     cursor.executemany(
@@ -38,12 +33,13 @@ def upload_plant_data(conn):
         VALUES (%s, %s, %s, %s,
         (SELECT TOP 1 botanist_id FROM alpha.dim_botanist WHERE name=%s),
         (SELECT TOP 1 plant_id FROM alpha.dim_plant WHERE plant_name = %s))
-        ;""", fact_plant_reading.to_numpy().tolist())
+        ;""", fact_plant_readings.to_numpy().tolist())
     conn.commit()
 
     cursor.close()
 
 
-if __name__ == "__main__":
+def load_data(data):
+    """main function calling upload data func"""
     connection = get_connection()
-    upload_plant_data(connection)
+    upload_plant_data(connection, data)
