@@ -1,3 +1,18 @@
+************* Module load
+pipeline/load.py:35:0: C0301: Line too long (123/100) (line-too-long)
+pipeline/load.py:37:0: C0301: Line too long (114/100) (line-too-long)
+pipeline/load.py:37:0: C0301: Line too long (114/100) (line-too-long)
+pipeline/load.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+pipeline/load.py:3:0: E0401: Unable to import 'pymssql' (import-error)
+pipeline/load.py:9:15: W0621: Redefining name 'conn' from outer scope (line 44) (redefined-outer-name)
+pipeline/load.py:17:4: W0621: Redefining name 'conn' from outer scope (line 44) (redefined-outer-name)
+pipeline/load.py:27:22: W0621: Redefining name 'conn' from outer scope (line 44) (redefined-outer-name)
+pipeline/load.py:29:4: W0612: Unused variable 'dim_plant' (unused-variable)
+pipeline/load.py:29:15: W0612: Unused variable 'dim_botanist' (unused-variable)
+
+-----------------------------------
+Your code has been rated at 3.33/10
+
 
 ------------------------------------
 Your code has been rated at 10.00/10
