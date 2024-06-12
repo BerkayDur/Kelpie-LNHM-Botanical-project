@@ -17,11 +17,7 @@ GO
 
 CREATE TABLE alpha.DIM_plant (
     plant_id INT,
-<<<<<<< HEAD
     plant_name NVARCHAR(50),
-=======
-    plant_name TEXT,
->>>>>>> 87fb3fe (yay seeding)
     scientific_name TEXT,
     origin_longitude DECIMAL(9,6),
     origin_latitude DECIMAL(8,6),
@@ -45,7 +41,6 @@ CREATE TABLE alpha.FACT_plant_reading (
 );
 GO
 
-<<<<<<< HEAD
 INSERT INTO alpha.DIM_plant
 (plant_id, plant_name, scientific_name, origin_longitude, origin_latitude, origin_town, origin_country_code, origin_region)
 VALUES
@@ -105,8 +100,4 @@ VALUES
 ('Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'),
 ('Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948');
 GO
-=======
-INSERT INTO alpha.DIM_plant(
-    
-)
->>>>>>> 87fb3fe (yay seeding)
+
