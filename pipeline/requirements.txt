@@ -1,9 +1,8 @@
+
 pytest
 pylint
 requests
-rich
-aiohttp
-aiodns
 pandas
 python-dotenv
 pymssql
+

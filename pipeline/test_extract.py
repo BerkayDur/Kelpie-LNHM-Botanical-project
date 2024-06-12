@@ -1,6 +1,6 @@
 from extract import get_data, fetch_data, extract_data
 from unittest.mock import patch, MagicMock
-
+import requests
 
 @patch('extract.requests.get')
 def test_get_data_success(mock_get):
@@ -14,6 +14,34 @@ def test_get_data_success(mock_get):
     assert mock_get.call_count == 1
     assert mock_get.return_value.json.call_count == 1
     assert result == expected_data
+
+
+@patch('extract.requests.get')
+def test_http_error(mock_get):
+    mock_get.side_effect = requests.exceptions.HTTPError
+    result = get_data(1)
+    assert result == {'error': "HTTPError"}
+
+
+@patch('extract.requests.get')
+def test_timeout_error(mock_get):
+    mock_get.side_effect = requests.exceptions.ReadTimeout
+    result = get_data(1)
+    assert result == {'error': "Timeout"}
+
+
+@patch('extract.requests.get')
+def test_connection_error(mock_get):
+    mock_get.side_effect = requests.exceptions.ConnectionError
+    result = get_data(1)
+    assert result == {'error': "ConnectionError"}
+
+
+@patch('extract.requests.get')
+def test_request_exception(mock_get):
+    mock_get.side_effect = requests.exceptions.RequestException
+    result = get_data(1)
+    assert result == {'error': "RequestException"}
 
 
 @patch('extract.get_data')
