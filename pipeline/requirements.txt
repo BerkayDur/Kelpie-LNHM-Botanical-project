@@ -4,4 +4,4 @@ pylint
 requests
 pandas
 python-dotenv
-
+pymssql
