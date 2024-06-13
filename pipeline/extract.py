@@ -9,7 +9,7 @@ def get_data(api: str, i: int) -> dict:
     Fetches data from the API for a given index.
     """
     try:
-        response = requests.get(f'{}{i}', timeout=60)
+        response = requests.get(f'{api}{i}', timeout=60)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.HTTPError:
