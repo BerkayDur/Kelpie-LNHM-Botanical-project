@@ -21,7 +21,7 @@ CREATE TABLE alpha.DIM_plant (
     scientific_name TEXT,
     origin_longitude DECIMAL(9,6),
     origin_latitude DECIMAL(8,6),
-    origin_town TEXT,
+    origin_town NVARCHAR(50),
     origin_country_code TEXT,
     origin_region TEXT,
     PRIMARY KEY (plant_id)
@@ -67,7 +67,7 @@ VALUES
 (20, 'Salvia Splendens', 'Salvia splendens', 1.10687, 41.15612, 'Reus', 'ES', 'Europe'),
 (21, 'Anthurium', 'Anthurium andraeanum', -51.50361, -29.2975, 'Carlos Barbosa', 'BR', 'America'),
 (22, 'Bird of Paradise', 'Heliconia schiedeana "Fire and Ice"', 10.98461, 48.35693, 'Friedberg', 'DE', 'Europe'),
-(22, 'Cordyline Fruticosa', 'Cordyline fruticosa', 13.29371, 52.53048, 'Charlottenburg-Nord', 'DE', 'Europe'),
+-- (22, 'Cordyline Fruticosa', 'Cordyline fruticosa', 13.29371, 52.53048, 'Charlottenburg-Nord', 'DE', 'Europe'),
 (23, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (24, 'Ficus', 'Ficus carica', 144.09638, 43.82634, 'Motomachi', 'JP', 'Asia'),
 (25, 'Palm Trees', Null, 34.3869, 11.8659, 'Ar Ruseris', 'SD', 'Africa'),
