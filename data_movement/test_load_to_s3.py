@@ -12,11 +12,11 @@ def test_is_s3_valid():
     client = boto3.client('s3', region_name='eu-west-2')
     assert is_s3(client)
 
-@pytest.mark.parametrize('inp', [boto3.client('sns'), boto3.client('ec2'), 'None', 's3', 23])
+@pytest.mark.parametrize('inp', [boto3.client('sns', region_name='eu-west-2'), boto3.client('ec2', region_name='eu-west-2'), 'None', 's3', 23])
 def test_is_s3_invalid(inp):
     assert not is_s3(inp)
 
-@pytest.mark.parametrize('client', [boto3.client('sns'), boto3.client('ec2'), 'None', 's3', 23])
+@pytest.mark.parametrize('client', [boto3.client('sns', region_name='eu-west-2'), boto3.client('ec2', region_name='eu-west-2'), 'None', 's3', 23])
 def test_is_bucket_invalid_client_error(client):
     with pytest.raises(TypeError):
         is_bucket(client, 'name')
