@@ -4,3 +4,5 @@ altair
 streamlit
 python-dotenv
 pandas
+boto3
+pymssql
