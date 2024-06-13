@@ -1,4 +1,4 @@
-from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data, convert_to_dataframe, transform_data, clean_data, convert_to_datetime, identify_datetime_format
+from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data, convert_to_dataframe, transform_data, remove_nan, convert_to_datetime, identify_datetime_format
 import pytest
 import datetime
 import pandas as pd
@@ -61,14 +61,8 @@ def example_expected_output():
             'name': 'Eliza Andrews',
             'email': 'eliza.andrews@lnhm.co.uk',
             'phone_no': '(846)669-6651x75948'}],
-        [{
-            'soil_moisture': 15.478956774353875,
-            'temperature': 11.483367104821191,
-            'last_watered': datetime.datetime(2024, 6, 10, 13, 23, 1),
-            'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9),
-            'name':  'Eliza Andrews',
-            'plant_name': 'Bird of paradise'
-        }]
+        [{'soil_moisture': 15.478956774353875, 'temperature': 11.483367104821191, 'last_watered': datetime.datetime(
+            2024, 6, 10, 13, 23, 1), 'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9), 'plant_id': 8, 'name': 'Eliza Andrews'}]
     )
 
 
@@ -264,6 +258,7 @@ def test_plant_details(example_valid_data):
         }
 
 
+
 def test_plant_details_missing(example_invalid_data):
     assert plant_details(example_invalid_data) == {
         'plant_id': 7,
@@ -278,25 +273,14 @@ def test_plant_details_missing(example_invalid_data):
 
 
 def test_plant_readings(example_valid_data):
-    assert plant_readings(example_valid_data) == {
-        'soil_moisture': 15.478956774353875,
-        'temperature': 11.483367104821191,
-        'last_watered': datetime.datetime(2024, 6, 10, 13, 23, 1),
-        'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9),
-        'name':  'Eliza Andrews',
-        'plant_name': 'Bird of paradise'
-        }
+    assert plant_readings(example_valid_data) == {'soil_moisture': 15.478956774353875, 'temperature': 11.483367104821191, 'last_watered': datetime.datetime(
+            2024, 6, 10, 13, 23, 1), 'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9), 'plant_id': 8, 'name': 'Eliza Andrews'}
+        
 
 
 def test_plant_readings_missing_details(example_invalid_data):
     assert plant_readings(example_invalid_data) == {
-        'soil_moisture': None,
-        'temperature': None,
-        'last_watered': None,
-        'recording_taken': None,
-        'name': None,
-        'plant_name': None
-    }
+        'soil_moisture': None, 'temperature': None, 'last_watered': None, 'recording_taken': None, 'plant_id': 7, 'name': None}
 
 
 def test_group_data(example_valid_data, example_expected_output):
@@ -323,12 +307,12 @@ def test_convert_to_dataframe():
 
 
 def test_main(example_valid_data):
-    dim_plant, dim_botanist, fact_plant_reading = transform_data([example_valid_data])
+    table = transform_data([example_valid_data])
 
     assert isinstance(
-            dim_plant, pd.DataFrame)
-    assert isinstance(dim_botanist, pd.DataFrame)
-    assert isinstance(fact_plant_reading, pd.DataFrame)
+            table['dim_plant'], pd.DataFrame)
+    assert isinstance(table['dim_botanist'], pd.DataFrame)
+    assert isinstance(table['fact_plant_reading'], pd.DataFrame)
 
 
 
@@ -352,6 +336,6 @@ def test_clean_data():
                      'C': 'test'}]
     df_cleaned_expected = pd.DataFrame(cleaned_data)
 
-    cleaned_df = clean_data(df_with_nan, threshold=2)
+    cleaned_df = remove_nan(df_with_nan, threshold=2)
 
     assert cleaned_df.equals(df_cleaned_expected)

@@ -25,16 +25,13 @@ def get_connection():
 def upload_plant_data(conn, fact_plant_readings):
     """Uploads plant readings to the database."""
     cursor = get_cursor(conn)
-
     cursor.executemany(
         """insert into alpha.fact_plant_reading
-        (soil_moisture, temperature, last_watered, taken_at, botanist_id, plant_id)
-        VALUES (%s, %s, %s, %s,
-        (SELECT TOP 1 botanist_id FROM alpha.dim_botanist WHERE name=%s),
-        (SELECT TOP 1 plant_id FROM alpha.dim_plant WHERE plant_name = %s))
+        (soil_moisture, temperature, last_watered, taken_at, plant_id, botanist_id)
+        VALUES (%s, %s, %s, %s, %s,
+        (SELECT TOP 1 botanist_id FROM alpha.dim_botanist WHERE name=%s))
         ;""", fact_plant_readings.to_numpy().tolist())
     conn.commit()
-
     cursor.close()
 
 
