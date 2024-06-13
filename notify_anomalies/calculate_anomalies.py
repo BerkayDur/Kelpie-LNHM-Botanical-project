@@ -101,40 +101,64 @@ WHERE rn <= 3
 ORDER BY plant_id, taken_at DESC;
 """)
         data = cur.fetchall()
+
+    db_conn.close()
+
     return data
 
 
-def check_for_errors(s_mean: list[float], t_mean: list[float], readings: list[tuple]):
+def error_message(soil_anomalies: list[int], temp_anomalies: list[int]) -> str:
+    """Function that determines which error message to display"""
+    if soil_anomalies and temp_anomalies:
+        return f"""Anomalies regarding the soil detected in the following plants:
+{[f"{plant}\n" for plant in soil_anomalies]}
+Anomalies regarding the temperature of the plant detected in the following plants:
+{[f"{plant}\n" for plant in temp_anomalies]}
+"""
+    if soil_anomalies:
+        return f"""Anomalies regarding the soil detected in the following plants:
+{[f"{plant}\n" for plant in soil_anomalies]}"""
+    if temp_anomalies:
+        return f"""Anomalies regarding the soil detected in the following plants:
+{[f"{plant}\n" for plant in temp_anomalies]}"""
+
+    return "No anomalies have been detected!"
+
+
+def check_for_errors(s_mean: list[float], t_mean: list[float], readings: list[tuple], threshold: int) -> str:
     """This function compares the mean value with the values of the recent readings."""
     grouped_readings = [readings[i:i + 3] for i in range(0, len(readings), 3)]
 
     plants_with_soil_anomalies = []
     plants_with_temp_anomalies = []
+
     for subgroup in grouped_readings:
         s_errors = 0
         t_errors = 0
         for i, reading in enumerate(subgroup):
-            if reading[1] > s_mean[i] + int(ENV["ANOMALY_THRESHOLD"]) or reading[1] < s_mean[i] - int(ENV["ANOMALY_THRESHOLD"]):
+            if not reading[1]:
                 s_errors += 1
-            if reading[2] > t_mean[i] + int(ENV["ANOMALY_THRESHOLD"]) or reading[2] < t_mean[i] - int(ENV["ANOMALY_THRESHOLD"]):
+            elif reading[1] > s_mean[i] + threshold or reading[1] < s_mean[i] - threshold:
+                s_errors += 1
+
+            if not reading[2]:
                 t_errors += 1
+            elif reading[2] > t_mean[i] + threshold or reading[2] < t_mean[i] - threshold:
+                t_errors += 1
+
         if s_errors == 3:
             plants_with_soil_anomalies.append(subgroup[0][0])
-            return f"Anomaly has been detected regarding the soil moisture levels in plant {subgroup[0][0]}!"
         if t_errors == 3:
             plants_with_temp_anomalies.append(subgroup[0][0])
-            return f"Anomaly has been detected regarding the temperature levels of plant {subgroup[0][0]}!"
 
-    if plants_with_soil_anomalies or plants_with_temp_anomalies:
-        return f""
+    resultant_message = error_message(
+        plants_with_soil_anomalies, plants_with_temp_anomalies)
 
-    return "No anomalies have been detected!"
+    return resultant_message
 
 
 def calculate_anomalies():
     """Runs all the functions required to execute the purpose of this script."""
-    load_dotenv()
-
     time_yesterday = get_the_time(DEFAULT_TIME_FRAME_HOURS)
 
     plant_df = get_dataframe(time_yesterday)
@@ -143,10 +167,14 @@ def calculate_anomalies():
 
     recent_readings = get_recent_readings()
 
-    result = check_for_errors(soil_means, temp_means, recent_readings)
+    threshold_number = int(ENV["ANOMALY_THRESHOLD"])
 
-    print(result)
+    result = check_for_errors(soil_means, temp_means,
+                              recent_readings, threshold_number)
+
+    return result
 
 
 if __name__ == "__main__":
-    calculate_anomalies()
+    load_dotenv()
+    print(calculate_anomalies())
