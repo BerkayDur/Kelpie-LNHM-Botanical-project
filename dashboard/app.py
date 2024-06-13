@@ -54,7 +54,6 @@ def get_bucket_data():
     s3.download_file("c11-kelpie-lmnh-plant-data", recent_key,
                      os.path.join("data", "recent_data.parquet"))
     df = pd.read_parquet(os.path.join("data", "recent_data.parquet"))
-    print(df)
     return df
 
 
@@ -69,7 +68,6 @@ def create_pie_chart(readings):
     st.subheader("Proportion of plants by their origin regions")
     regions = readings["origin_region"].value_counts(
         normalize=True).reset_index()
-    # regions
     st.altair_chart(alt.Chart(regions).mark_arc().encode(
         theta="proportion",
         color=alt.Color("origin_region:N",
@@ -79,7 +77,8 @@ def create_pie_chart(readings):
 
 def create_latest_readings_bar(latest):
     """creates bar chart for latest readings for each plant"""
-    st.subheader("Latest soil moisture and temp")
+    st.subheader(
+        "Latest soil moisture and temperature readings for each plant")
     st.markdown("Scroll while hovering over the graphs to zoom in and out!")
     temp = latest[["plant_id", "temperature", "soil_moisture"]]
     st.altair_chart(alt.Chart(temp).mark_bar().encode(
@@ -96,8 +95,18 @@ def create_latest_readings_bar(latest):
     ).interactive())
 
 
-def create_line_graph(data):
-    st.altair_chart(alt.Chart)
+def create_line_graph_temp(data):
+    st.altair_chart(alt.Chart(data).mark_line().encode(
+        x=alt.X("taken_at:T", title="Time of reading"),
+        y=alt.Y("temperature:Q"),
+        color="plant_id:N").interactive())
+
+
+def create_line_graph_soil(data):
+    st.altair_chart(alt.Chart(data).mark_line().encode(
+        x=alt.X("taken_at:T", title="Time of reading"),
+        y=alt.Y("soil_moisture:Q", title="Soil moisture"),
+        color="plant_id:N").interactive())
 
 
 if __name__ == "__main__":
@@ -105,9 +114,9 @@ if __name__ == "__main__":
     conn = get_connection()
     # cursor = get_cursor(conn)
     history = get_bucket_data()
-    print(history)
     st.markdown("History")
     history
+
     st.title("🌿LMNH Plant Monitoring System 🌱")
     readings = pd.read_sql("""SELECT reading_id, soil_moisture, temperature, last_watered, taken_at, p.plant_id,
     plant_name, scientific_name, origin_longitude, origin_latitude, origin_town, origin_country_code, origin_region, b.botanist_id, name, email, phone_no
@@ -127,9 +136,16 @@ if __name__ == "__main__":
     # JOIN alpha.dim_plant as p ON p.plant_id = pr.plant_id""")
     # data = cursor.fetchall()
     # reading = Dataframe(data)
-    st.subheader("Latest data")
+    st.subheader("Latest data (24 hours)")
+    create_line_graph_temp(readings)
+    create_line_graph_soil(readings)
     create_latest_readings_bar(latest)
 
-    st.subheader("All data")
+    st.subheader("Historical data")
+
+    create_line_graph_temp(history)
+    create_line_graph_soil(history)
+
+    st.subheader("Plant information")
     create_pie_chart(readings)
     create_map(readings)
