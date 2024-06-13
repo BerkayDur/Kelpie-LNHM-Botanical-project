@@ -6,6 +6,6 @@ collected 75 items
 data_movement/test_extract_from_db.py ......................             [ 29%]
 pipeline/test_extract.py .......                                         [ 38%]
 pipeline/test_load.py .                                                  [ 40%]
-pipeline/test_transform.py ............................................. [100%]
+pipeline/test_transform.py .......................................FFF... [100%]
 
-============================== 75 passed in 0.58s ==============================
+========================= 3 failed, 72 passed in 0.56s =========================
