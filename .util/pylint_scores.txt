@@ -2,13 +2,11 @@
 ------------------------------------
 Your code has been rated at 10.00/10
 
+************* Module main
+pipeline/main.py:6:0: E0001: Cannot import 'extract' due to 'f-string: valid expression required before '}' (extract, line 12)' (syntax-error)
 
-------------------------------------
-Your code has been rated at 10.00/10
-
-
-------------------------------------
-Your code has been rated at 10.00/10
+-----------------------------------
+Your code has been rated at 7.37/10
 
 
 ------------------------------------
@@ -18,6 +16,8 @@ Your code has been rated at 10.00/10
 ------------------------------------
 Your code has been rated at 10.00/10
 
+************* Module extract
+pipeline/extract.py:12:36: E0001: Parsing failed: 'f-string: valid expression required before '}' (extract, line 12)' (syntax-error)
 
 ------------------------------------
 Your code has been rated at 10.00/10
