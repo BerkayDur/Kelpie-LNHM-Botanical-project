@@ -18,3 +18,13 @@ Your code has been rated at 10.00/10
 ------------------------------------
 Your code has been rated at 10.00/10
 
+
+------------------------------------
+Your code has been rated at 10.00/10
+
+************* Module load_to_s3
+data_movement/load_to_s3.py:27:16: W0212: Access to a protected member _service_model of a client class (protected-access)
+
+-----------------------------------
+Your code has been rated at 9.76/10
+
