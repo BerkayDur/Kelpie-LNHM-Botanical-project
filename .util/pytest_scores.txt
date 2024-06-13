@@ -7,6 +7,6 @@ data_movement/test_extract_from_db.py ...............                    [ 18%]
 data_movement/test_load_to_s3.py ...............                         [ 36%]
 pipeline/test_extract.py .......                                         [ 44%]
 pipeline/test_load.py .                                                  [ 45%]
-pipeline/test_transform.py .......................................FFF... [100%]
+pipeline/test_transform.py ............................................. [100%]
 
-========================= 3 failed, 80 passed in 0.89s =========================
+============================== 83 passed in 0.84s ==============================

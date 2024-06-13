@@ -6,21 +6,17 @@ Your code has been rated at 10.00/10
 ------------------------------------
 Your code has been rated at 10.00/10
 
-************* Module handler
-pipeline/handler.py:21:8: C0415: Import outside toplevel (traceback) (import-outside-toplevel)
 
------------------------------------
-Your code has been rated at 9.29/10
+------------------------------------
+Your code has been rated at 10.00/10
 
 
 ------------------------------------
 Your code has been rated at 10.00/10
 
-************* Module extract
-pipeline/extract.py:7:13: W0621: Redefining name 'i' from outer scope (line 43) (redefined-outer-name)
 
------------------------------------
-Your code has been rated at 9.63/10
+------------------------------------
+Your code has been rated at 10.00/10
 
 
 ------------------------------------
