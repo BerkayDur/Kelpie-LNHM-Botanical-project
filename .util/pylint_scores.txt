@@ -2,11 +2,9 @@
 ------------------------------------
 Your code has been rated at 10.00/10
 
-************* Module main
-pipeline/main.py:6:0: E0001: Cannot import 'extract' due to 'f-string: valid expression required before '}' (extract, line 12)' (syntax-error)
 
------------------------------------
-Your code has been rated at 7.37/10
+------------------------------------
+Your code has been rated at 10.00/10
 
 
 ------------------------------------
@@ -17,7 +15,12 @@ Your code has been rated at 10.00/10
 Your code has been rated at 10.00/10
 
 ************* Module extract
-pipeline/extract.py:12:36: E0001: Parsing failed: 'f-string: valid expression required before '}' (extract, line 12)' (syntax-error)
+pipeline/extract.py:41:11: E1121: Too many positional arguments for function call (too-many-function-args)
+pipeline/extract.py:4:0: C0411: standard import "os.environ" should be placed before third party imports "lambda_multiprocessing.Pool", "requests" (wrong-import-order)
+
+-----------------------------------
+Your code has been rated at 7.69/10
+
 
 ------------------------------------
 Your code has been rated at 10.00/10
