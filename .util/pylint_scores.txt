@@ -12,9 +12,15 @@ data_movement/extract_load_pipeline.py:13:0: C0304: Final newline missing (missi
 -----------------------------------
 Your code has been rated at 8.75/10
 
+************* Module extract_from_db
+data_movement/extract_from_db.py:35:20: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+data_movement/extract_from_db.py:45:20: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+data_movement/extract_from_db.py:83:10: E0602: Undefined variable 'extract_data' (undefined-variable)
+data_movement/extract_from_db.py:11:0: W0611: Unused datetime imported from datetime (unused-import)
+data_movement/extract_from_db.py:11:0: W0611: Unused timedelta imported from datetime (unused-import)
 
-------------------------------------
-Your code has been rated at 10.00/10
+-----------------------------------
+Your code has been rated at 7.63/10
 
 ************* Module load_to_s3
 data_movement/load_to_s3.py:65:0: C0304: Final newline missing (missing-final-newline)
