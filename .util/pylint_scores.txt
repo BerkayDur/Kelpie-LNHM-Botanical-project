@@ -1,3 +1,11 @@
+************* Module calculate_anomalies
+notify_anomalies/calculate_anomalies.py:84:20: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
+notify_anomalies/calculate_anomalies.py:119:4: W0612: Unused variable 'soil_means' (unused-variable)
+notify_anomalies/calculate_anomalies.py:119:16: W0612: Unused variable 'temp_means' (unused-variable)
+
+-----------------------------------
+Your code has been rated at 9.41/10
+
 
 ------------------------------------
 Your code has been rated at 10.00/10
