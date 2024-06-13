@@ -73,7 +73,6 @@ def extract_and_delete_data() -> None:
     db_data = query_and_extract_rds(db_conn)
     delete_from_plant_reading_table(db_conn)
     db_conn.close()
-    print(len(db_data))
 
     load_into_parquet(db_data, COLUMNS)
 

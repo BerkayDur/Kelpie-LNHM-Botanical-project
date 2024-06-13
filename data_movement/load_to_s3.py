@@ -29,7 +29,6 @@ def is_s3(client: s3_client) -> bool:
 def generate_unique_file_name(file_name: str) -> str:
     '''Generate a unique file name based on datetime.now()'''
     splt = file_name.split('.')
-    print(datetime.now())
     return '.'.join(splt[:-1]) + str(datetime.now()) + '.' + splt[-1]
 
 def is_bucket(client: s3_client, bucket_name: str) -> bool:
