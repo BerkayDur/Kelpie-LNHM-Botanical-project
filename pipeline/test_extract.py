@@ -7,12 +7,15 @@ import pytest
 def example_url():
     return 'www.api.com'
 
+
 @patch('extract.requests.get')
-def test_get_data_success(mock_get, example_url):
+@patch('extract.get_api_url_from_env')
+def test_get_data_success(mock_get_api_url_from_env, mock_get, example_url):
     expected_data = {'id': 1, 'name': 'Test Plant'}
     mock_get.return_value.json.return_value = expected_data
+    mock_get_api_url_from_env.return_value = example_url
 
-    result = get_data(example_url, 1)
+    result = get_data(1)
 
     assert mock_get.call_args[1] == {'timeout': 60}
     assert mock_get.call_count == 1
@@ -21,30 +24,38 @@ def test_get_data_success(mock_get, example_url):
 
 
 @patch('extract.requests.get')
-def test_http_error(mock_get, example_url):
+@patch('extract.get_api_url_from_env')
+def test_http_error(mock_get_api_url_from_env, mock_get, example_url):
     mock_get.side_effect = requests.exceptions.HTTPError
-    result = get_data(example_url, 1)
+    mock_get_api_url_from_env.return_value = example_url
+    result = get_data(1)
     assert result == {'error': "HTTPError"}
 
 
 @patch('extract.requests.get')
-def test_timeout_error(mock_get, example_url):
+@patch('extract.get_api_url_from_env')
+def test_timeout_error(mock_get_api_url_from_env, mock_get, example_url):
     mock_get.side_effect = requests.exceptions.ReadTimeout
-    result = get_data(example_url, 1)
+    mock_get_api_url_from_env.return_value = example_url
+    result = get_data(1)
     assert result == {'error': "Timeout"}
 
 
 @patch('extract.requests.get')
-def test_connection_error(mock_get, example_url):
+@patch('extract.get_api_url_from_env')
+def test_connection_error(mock_get_api_url_from_env, mock_get, example_url):
     mock_get.side_effect = requests.exceptions.ConnectionError
-    result = get_data(example_url, 1)
+    mock_get_api_url_from_env.return_value = example_url
+    result = get_data(1)
     assert result == {'error': "ConnectionError"}
 
 
 @patch('extract.requests.get')
-def test_request_exception(mock_get, example_url):
+@patch('extract.get_api_url_from_env')
+def test_request_exception(mock_get_api_url_from_env, mock_get, example_url):
     mock_get.side_effect = requests.exceptions.RequestException
-    result = get_data(example_url, 1)
+    mock_get_api_url_from_env.return_value = example_url
+    result = get_data(1)
     assert result == {'error': "RequestException"}
 
 
@@ -59,8 +70,6 @@ def test_fetch_data_success(mock_Pool, mock_get_data):
 
 
 @patch('extract.fetch_data')
-@patch('extract.get_env_values')
-def test_main(mock_get_env_values, mock_fetch_data, example_url):
-    mock_get_env_values.return_value = example_url
+def test_main(mock_fetch_data):
     extract_data(51)
     mock_fetch_data.assert_called_once()
