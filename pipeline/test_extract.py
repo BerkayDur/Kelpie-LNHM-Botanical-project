@@ -59,6 +59,8 @@ def test_fetch_data_success(mock_Pool, mock_get_data):
 
 
 @patch('extract.fetch_data')
-def test_main(mock_fetch_data):
+@patch('extract.get_env_values')
+def test_main(mock_get_env_values, mock_fetch_data, example_url):
+    mock_get_env_values.return_value = example_url
     extract_data(51)
     mock_fetch_data.assert_called_once()

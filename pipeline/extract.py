@@ -31,11 +31,13 @@ def fetch_data(number_of_plants: int) -> list[dict]:
         data = list(pool.map(get_data, indices))
     return data
 
+def get_env_values():
+    return ENV["API_URL"]
 
 def extract_data(number_of_plants: int) -> list[dict]:
     """
     Main
     """
     load_dotenv()
-    api_url = ENV["API_URL"]
+    api_url = get_env_values()
     return fetch_data(api_url, number_of_plants)
