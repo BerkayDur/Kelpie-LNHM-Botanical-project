@@ -143,11 +143,9 @@ def plant_readings(reading: dict) -> dict:
             'temperature': get_details(reading, 'temperature'),
             'last_watered': convert_to_datetime(get_details(reading, 'last_watered')),
             'recording_taken': convert_to_datetime(get_details(reading, 'recording_taken')),
-            'name': get_botanist_detail(reading, 'name'),
-            'plant_name': get_details(reading, 'name'),
-            'origin_town': get_origin_detail(reading, ORIGIN_TOWN_INDEX)
+            'plant_id': get_details(reading, 'plant_id'),
+            'name': get_botanist_detail(reading, 'name')
         }
-
 
 
 def group_data(readings: list[dict]) -> tuple[list, list, list]:

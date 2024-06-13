@@ -61,15 +61,8 @@ def example_expected_output():
             'name': 'Eliza Andrews',
             'email': 'eliza.andrews@lnhm.co.uk',
             'phone_no': '(846)669-6651x75948'}],
-        [{
-            'soil_moisture': 15.478956774353875,
-            'temperature': 11.483367104821191,
-            'last_watered': datetime.datetime(2024, 6, 10, 13, 23, 1),
-            'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9),
-            'name':  'Eliza Andrews',
-            'plant_name': 'Bird of paradise',
-            'origin_town': 'Bonoua'
-        }]
+        [{'soil_moisture': 15.478956774353875, 'temperature': 11.483367104821191, 'last_watered': datetime.datetime(
+            2024, 6, 10, 13, 23, 1), 'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9), 'plant_id': 8, 'name': 'Eliza Andrews'}]
     )
 
 
@@ -265,6 +258,7 @@ def test_plant_details(example_valid_data):
         }
 
 
+
 def test_plant_details_missing(example_invalid_data):
     assert plant_details(example_invalid_data) == {
         'plant_id': 7,
@@ -279,27 +273,14 @@ def test_plant_details_missing(example_invalid_data):
 
 
 def test_plant_readings(example_valid_data):
-    assert plant_readings(example_valid_data) == {
-        'soil_moisture': 15.478956774353875,
-        'temperature': 11.483367104821191,
-        'last_watered': datetime.datetime(2024, 6, 10, 13, 23, 1),
-        'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9),
-        'name':  'Eliza Andrews',
-        'plant_name': 'Bird of paradise',
-        'origin_town': 'Bonoua'
-        }
+    assert plant_readings(example_valid_data) == {'soil_moisture': 15.478956774353875, 'temperature': 11.483367104821191, 'last_watered': datetime.datetime(
+            2024, 6, 10, 13, 23, 1), 'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9), 'plant_id': 8, 'name': 'Eliza Andrews'}
+        
 
 
 def test_plant_readings_missing_details(example_invalid_data):
     assert plant_readings(example_invalid_data) == {
-        'soil_moisture': None,
-        'temperature': None,
-        'last_watered': None,
-        'recording_taken': None,
-        'name': None,
-        'plant_name': None,
-        'origin_town': None
-    }
+        'soil_moisture': None, 'temperature': None, 'last_watered': None, 'recording_taken': None, 'plant_id': 7, 'name': None}
 
 
 def test_group_data(example_valid_data, example_expected_output):

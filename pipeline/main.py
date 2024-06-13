@@ -8,7 +8,7 @@ import transform
 import load
 
 
-def run_pipeline(number_of_plants: int):
+def run_pipeline(number_of_plants: int) -> None:
     """
     Runs complete ETL pipeline
     """
