@@ -2,6 +2,7 @@
 from datetime import datetime
 import re
 import pandas as pd
+import numpy as np
 
 LATITUDE_INDEX = 0
 LONGITUDE_INDEX = 1
@@ -143,7 +144,8 @@ def plant_readings(reading: dict) -> dict:
             'last_watered': convert_to_datetime(get_details(reading, 'last_watered')),
             'recording_taken': convert_to_datetime(get_details(reading, 'recording_taken')),
             'name': get_botanist_detail(reading, 'name'),
-            'plant_name': get_details(reading, 'name')
+            'plant_name': get_details(reading, 'name'),
+            'origin_town': get_origin_detail(reading, ORIGIN_TOWN_INDEX)
         }
 
 
@@ -186,7 +188,7 @@ def check_soil_moisture(moisture: int) -> int | None:
     Checks if soil moisture is below 0, which would be invalid
     """
     if not moisture or moisture < 0:
-        return 0
+        return None
     return moisture
 
 
@@ -195,6 +197,7 @@ def remove_nan(df: pd.DataFrame, threshold: int = 2) -> pd.DataFrame:
     Drops all 
     """
     df = df.dropna(thresh=threshold)
+    df = df.replace(np.nan, None)
     return df
 
 

@@ -40,4 +40,6 @@ def extract_data(number_of_plants: int) -> list[dict]:
 
 
 if __name__ == "__main__":
-    print(extract_data(51))
+    for i in extract_data(51):
+        print(i)
+    print(len(extract_data(51)))

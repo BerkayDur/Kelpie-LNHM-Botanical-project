@@ -6,3 +6,4 @@ python-dotenv
 pymssql
 logging
 lambda_multiprocessing
+numpy
