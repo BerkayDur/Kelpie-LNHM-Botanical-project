@@ -5,8 +5,8 @@ collected 83 items
 
 data_movement/test_extract_from_db.py ...............                    [ 18%]
 data_movement/test_load_to_s3.py ...............                         [ 36%]
-pipeline/test_extract.py ......F                                         [ 44%]
+pipeline/test_extract.py .......                                         [ 44%]
 pipeline/test_load.py .                                                  [ 45%]
 pipeline/test_transform.py ............................................. [100%]
 
-========================= 1 failed, 82 passed in 0.85s =========================
+============================== 83 passed in 0.86s ==============================
