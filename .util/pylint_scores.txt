@@ -14,13 +14,9 @@ Your code has been rated at 10.00/10
 ------------------------------------
 Your code has been rated at 10.00/10
 
-************* Module extract
-pipeline/extract.py:34:0: C0116: Missing function or method docstring (missing-function-docstring)
-pipeline/extract.py:43:11: E1121: Too many positional arguments for function call (too-many-function-args)
-pipeline/extract.py:4:0: C0411: standard import "os.environ" should be placed before third party imports "lambda_multiprocessing.Pool", "requests" (wrong-import-order)
 
------------------------------------
-Your code has been rated at 7.50/10
+------------------------------------
+Your code has been rated at 10.00/10
 
 
 ------------------------------------
