@@ -62,5 +62,4 @@ def load_to_s3(config: dict) -> None:
 
 if __name__ == '__main__':
     load_dotenv()
-    # load_to_s3(CONFIG)
-    print(generate_unique_file_name('sdfsl.csv'))
+    load_to_s3(CONFIG)
