@@ -54,7 +54,7 @@ VALUES
 (7, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (8, 'Bird of paradise', 'Heliconia schiedeana "Fire and Ice"', -3.59625, 5.27247, 'Bonoua', 'CI', 'Africa'),
 (9, 'Cactus', 'Pereskia grandifolia', 11.32903, 50.9803, 'Weimar', 'DE', 'Europe'),
-(10, 'Dragon tree', Null, 16.43915, 43.50891, 'Split', 'HR', 'Europe'),
+(10, 'Dragon tree,', Null, 16.43915, 43.50891, 'Split', 'HR', 'Europe'),
 (11, 'Asclepias Curassavica', 'Asclepias curassavica', -156.47432, 20.88953, 'Kahului', 'US', 'Pacific'),
 (12, 'Brugmansia X Candida', Null, -94.74049, 32.5007, 'Longview', 'US', 'America'),
 (13, 'Canna ‘Striata’', Null, 8.61839, 49.68369, 'Bensheim', 'DE', 'Europe'),
