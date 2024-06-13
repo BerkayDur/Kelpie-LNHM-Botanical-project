@@ -9,7 +9,7 @@ import mypy_boto3_s3.client as s3_client
 from load_to_s3 import is_s3, is_bucket, generate_unique_file_name, write_file_to_bucket
 
 def test_is_s3_valid():
-    client = boto3.client('s3')
+    client = boto3.client('s3', region_name='eu-west-2')
     assert is_s3(client)
 
 @pytest.mark.parametrize('inp', [boto3.client('sns'), boto3.client('ec2'), 'None', 's3', 23])
