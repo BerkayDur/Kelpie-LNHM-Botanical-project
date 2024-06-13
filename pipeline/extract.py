@@ -3,7 +3,6 @@ from multiprocessing import Pool
 import requests
 
 API_URL = 'https://data-eng-plants-api.herokuapp.com/plants/'
-NUMBER_OF_PLANTS = 52
 
 def get_data(i: int) -> dict:
     """
@@ -33,7 +32,7 @@ def fetch_data(number_of_plants: int) -> list[dict]:
     return data
 
 
-def extract_data(number_of_plants: int = NUMBER_OF_PLANTS) -> list[dict]:
+def extract_data(number_of_plants: int) -> list[dict]:
     """
     Main
     """

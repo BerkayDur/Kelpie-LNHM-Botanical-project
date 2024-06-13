@@ -23,6 +23,7 @@ def get_botanist_detail(reading: dict, botanist_detail: str) -> str | None:
     return None
 
 
+
 def get_origin_detail(reading: dict, index: int) -> str | None:
     """
     Fetches specific detail about the plant's origin
@@ -70,6 +71,7 @@ def get_details(reading: dict, detail: str) -> str | int | None:
     if not isinstance(detail, str):
         raise TypeError('botanist_detail must be of type str')
     return reading.get(detail)
+
 
 
 def identify_datetime_format(date_string: str) -> str:
@@ -128,6 +130,7 @@ def plant_details(reading: dict) -> dict:
             'origin_region': get_origin_region(reading)}
 
 
+
 def plant_readings(reading: dict) -> dict:
     """
     Returns a dataframe of reading details
@@ -142,6 +145,7 @@ def plant_readings(reading: dict) -> dict:
             'name': get_botanist_detail(reading, 'name'),
             'plant_name': get_details(reading, 'name')
         }
+
 
 
 def group_data(readings: list[dict]) -> tuple[list, list, list]:
@@ -183,6 +187,7 @@ def clean_data(df: pd.DataFrame, threshold: int = 2) -> pd.DataFrame:
     """
     df = df.dropna(thresh=threshold)
     return df
+
 
 
 def transform_data(readings: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
