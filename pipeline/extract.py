@@ -29,7 +29,7 @@ def fetch_data(number_of_plants: int) -> list[dict]:
     Fetches data for multiple indices concurrently using a pool of processes.
     """
     indices = list(range(0, number_of_plants))
-    with Pool(processes=51) as pool:
+    with Pool(processes=6) as pool:
         data = list(pool.map(get_data, indices))
     return data
 
