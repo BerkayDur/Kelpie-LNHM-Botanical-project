@@ -1,10 +1,6 @@
 import pytest
 from unittest.mock import patch, MagicMock
 import boto3
-import botocore
-import botocore.client
-import botocore.exceptions
-import mypy_boto3_s3.client as s3_client
 
 from load_to_s3 import is_s3, is_bucket, generate_unique_file_name, write_file_to_bucket
 
