@@ -7,6 +7,7 @@ they are anomalies
 
 
 # pylint: disable=no-name-in-module
+# pylint: disable=line-too-long
 
 from os import environ as ENV
 from datetime import datetime, timedelta
@@ -76,12 +77,12 @@ def calculate_means(df: pd.DataFrame) -> list:
     return s_means, t_means
 
 
-def get_recent_readings() -> str:
+def get_recent_readings() -> list[tuple]:
     """Function that returns the last 3 readings for each plant id."""
     db_conn = get_connection()
 
     with db_conn.cursor() as cur:
-        cur.execute(f"""
+        cur.execute("""
 WITH RankedData AS (
     SELECT
         plant_id,
@@ -100,12 +101,34 @@ WHERE rn <= 3
 ORDER BY plant_id, taken_at DESC;
 """)
         data = cur.fetchall()
+    return data
 
-    df = pd.DataFrame(
-        data=data, columns=["plant_id", "soil_moisture", "temperature"])
-    df["plant_id"] = pd.to_numeric(
-        df["plant_id"], errors='coerce').astype('Int64')
-    return df
+
+def check_for_errors(s_mean: list[float], t_mean: list[float], readings: list[tuple]):
+    """This function compares the mean value with the values of the recent readings."""
+    grouped_readings = [readings[i:i + 3] for i in range(0, len(readings), 3)]
+
+    plants_with_soil_anomalies = []
+    plants_with_temp_anomalies = []
+    for subgroup in grouped_readings:
+        s_errors = 0
+        t_errors = 0
+        for i, reading in enumerate(subgroup):
+            if reading[1] > s_mean[i] + int(ENV["ANOMALY_THRESHOLD"]) or reading[1] < s_mean[i] - int(ENV["ANOMALY_THRESHOLD"]):
+                s_errors += 1
+            if reading[2] > t_mean[i] + int(ENV["ANOMALY_THRESHOLD"]) or reading[2] < t_mean[i] - int(ENV["ANOMALY_THRESHOLD"]):
+                t_errors += 1
+        if s_errors == 3:
+            plants_with_soil_anomalies.append(subgroup[0][0])
+            return f"Anomaly has been detected regarding the soil moisture levels in plant {subgroup[0][0]}!"
+        if t_errors == 3:
+            plants_with_temp_anomalies.append(subgroup[0][0])
+            return f"Anomaly has been detected regarding the temperature levels of plant {subgroup[0][0]}!"
+
+    if plants_with_soil_anomalies or plants_with_temp_anomalies:
+        return f""
+
+    return "No anomalies have been detected!"
 
 
 def calculate_anomalies():
@@ -118,8 +141,11 @@ def calculate_anomalies():
 
     soil_means, temp_means = calculate_means(plant_df)
 
-    thing = get_recent_readings()
-    print(thing)
+    recent_readings = get_recent_readings()
+
+    result = check_for_errors(soil_means, temp_means, recent_readings)
+
+    print(result)
 
 
 if __name__ == "__main__":
