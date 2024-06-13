@@ -37,9 +37,3 @@ def extract_data(number_of_plants: int) -> list[dict]:
     Main
     """
     return fetch_data(number_of_plants)
-
-
-if __name__ == "__main__":
-    for i in extract_data(51):
-        print(i)
-    print(len(extract_data(51)))

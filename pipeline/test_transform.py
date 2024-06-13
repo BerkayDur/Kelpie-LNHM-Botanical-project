@@ -67,7 +67,8 @@ def example_expected_output():
             'last_watered': datetime.datetime(2024, 6, 10, 13, 23, 1),
             'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9),
             'name':  'Eliza Andrews',
-            'plant_name': 'Bird of paradise'
+            'plant_name': 'Bird of paradise',
+            'origin_town': 'Bonoua'
         }]
     )
 
@@ -284,18 +285,20 @@ def test_plant_readings(example_valid_data):
         'last_watered': datetime.datetime(2024, 6, 10, 13, 23, 1),
         'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9),
         'name':  'Eliza Andrews',
-        'plant_name': 'Bird of paradise'
+        'plant_name': 'Bird of paradise',
+        'origin_town': 'Bonoua'
         }
 
 
 def test_plant_readings_missing_details(example_invalid_data):
     assert plant_readings(example_invalid_data) == {
-        'soil_moisture': 0,
+        'soil_moisture': None,
         'temperature': None,
         'last_watered': None,
         'recording_taken': None,
         'name': None,
-        'plant_name': None
+        'plant_name': None,
+        'origin_town': None
     }
 
 

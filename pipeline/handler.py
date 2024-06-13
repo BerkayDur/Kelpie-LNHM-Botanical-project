@@ -1,5 +1,6 @@
 """Lambda Handler"""
 
+import traceback
 from os import environ as ENV
 from dotenv import load_dotenv
 import main
@@ -18,7 +19,6 @@ def handler(event=None, context=None) -> dict:  # pylint: disable=unused-argumen
             'status': 'Success!!!!!!!'
         }
     except Exception as e:  # pylint: disable=broad-exception-caught
-        import traceback
         return {
             'status': 'failed :(',
             'reason': str(e),
