@@ -48,10 +48,10 @@ def test_request_exception(mock_get):
 @patch('extract.Pool')
 def test_fetch_data_success(mock_Pool, mock_get_data):
     fetch_data(51)
-    assert mock_Pool.return_value.__enter__.return_value.imap.call_count == 1
-    assert mock_Pool.return_value.__enter__.return_value.imap.call_args[0][1] == list(
+    assert mock_Pool.return_value.__enter__.return_value.map.call_count == 1
+    assert mock_Pool.return_value.__enter__.return_value.map.call_args[0][1] == list(
         range(0, 51))
-    assert mock_Pool.return_value.__enter__.return_value.imap.call_args[0][0] == mock_get_data
+    assert mock_Pool.return_value.__enter__.return_value.map.call_args[0][0] == mock_get_data
 
 
 @patch('extract.fetch_data')

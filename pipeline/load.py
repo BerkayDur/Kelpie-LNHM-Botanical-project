@@ -25,7 +25,6 @@ def get_connection():
 def upload_plant_data(conn, fact_plant_readings):
     """Uploads plant readings to the database."""
     cursor = get_cursor(conn)
-
     cursor.executemany(
         """insert into alpha.fact_plant_reading
         (soil_moisture, temperature, last_watered, taken_at, botanist_id, plant_id)

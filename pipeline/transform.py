@@ -138,7 +138,7 @@ def plant_readings(reading: dict) -> dict:
     if not isinstance(reading, dict):
         raise TypeError('entries into a DataFrame must be of type dict')
     return {
-            'soil_moisture': get_details(reading, 'soil_moisture'),
+            'soil_moisture': check_soil_moisture(get_details(reading, 'soil_moisture')),
             'temperature': get_details(reading, 'temperature'),
             'last_watered': convert_to_datetime(get_details(reading, 'last_watered')),
             'recording_taken': convert_to_datetime(get_details(reading, 'recording_taken')),
@@ -181,13 +181,21 @@ def convert_to_dataframe(readings: list[dict]) -> pd.DataFrame:
     return pd.DataFrame(readings)
 
 
-def clean_data(df: pd.DataFrame, threshold: int = 2) -> pd.DataFrame:
+def check_soil_moisture(moisture: int) -> int | None:
+    """
+    Checks if soil moisture is below 0, which would be invalid
+    """
+    if not moisture or moisture < 0:
+        return 0
+    return moisture
+
+
+def remove_nan(df: pd.DataFrame, threshold: int = 2) -> pd.DataFrame:
     """
     Drops all 
     """
     df = df.dropna(thresh=threshold)
     return df
-
 
 
 def transform_data(readings: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -196,8 +204,12 @@ def transform_data(readings: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame, pd
     """
     plant, botanist, plant_reading = group_data(readings)
 
-    dim_plant = convert_to_dataframe(plant)
-    dim_botanist = convert_to_dataframe(botanist)
-    fact_plant_reading = convert_to_dataframe(plant_reading)
+    plant_table = remove_nan(convert_to_dataframe(plant))
+    botanist_table = remove_nan(convert_to_dataframe(botanist))
+    reading_table = remove_nan(convert_to_dataframe(plant_reading))
 
-    return clean_data(dim_plant), clean_data(dim_botanist), clean_data(fact_plant_reading)
+    return {
+            "dim_plant": plant_table, 
+            "dim_botanist": botanist_table, 
+            "fact_plant_reading": reading_table
+            }

@@ -1,7 +1,8 @@
-
 pytest
 pylint
 requests
 pandas
 python-dotenv
 pymssql
+logging
+lambda_multiprocessing

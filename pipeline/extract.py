@@ -1,5 +1,5 @@
 """"Extract script"""
-from multiprocessing import Pool
+from lambda_multiprocessing import Pool
 import requests
 
 API_URL = 'https://data-eng-plants-api.herokuapp.com/plants/'
@@ -28,7 +28,7 @@ def fetch_data(number_of_plants: int) -> list[dict]:
     """
     indices = list(range(0, number_of_plants))
     with Pool(processes=8) as pool:
-        data = list(pool.imap(get_data, indices))
+        data = list(pool.map(get_data, indices))
     return data
 
 
@@ -37,3 +37,7 @@ def extract_data(number_of_plants: int) -> list[dict]:
     Main
     """
     return fetch_data(number_of_plants)
+
+
+if __name__ == "__main__":
+    print(extract_data(51))

@@ -15,12 +15,14 @@ def handler(event=None, context=None) -> dict:  # pylint: disable=unused-argumen
         main.run_pipeline(num_plants)
 
         return {
-            'status': 'Success!!!!!!!!!'
+            'status': 'Success!!!!!!!'
         }
     except Exception as e:  # pylint: disable=broad-exception-caught
+        import traceback
         return {
             'status': 'failed :(',
-            'reason': str(e) 
+            'reason': str(e),
+            'stack_trace': traceback.format_exc()
         }
 
 if __name__ == "__main__":
