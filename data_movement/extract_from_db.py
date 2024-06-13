@@ -8,7 +8,6 @@ This is a script that does the following:
 # pylint: disable=no-name-in-module
 
 from os import environ as ENV
-from datetime import datetime, timedelta
 import pandas as pd
 from dotenv import load_dotenv
 from pymssql import connect, Connection
@@ -32,7 +31,7 @@ def get_connection() -> Connection:
 def query_and_extract_rds(conn: Connection) -> list[list]:
     """This function creates the query to get the data start from time"""
     with conn.cursor() as cur:
-        cur.execute(f"""
+        cur.execute("""
             SELECT *
             FROM alpha.FACT_plant_reading
         """)
@@ -42,7 +41,7 @@ def query_and_extract_rds(conn: Connection) -> list[list]:
 def delete_from_plant_reading_table(conn: Connection) -> None:
     '''Deletes all data from the FACT_plant_reading table.'''
     with conn.cursor() as cur:
-        cur.execute(f'''
+        cur.execute('''
             DELETE FROM alpha.FACT_plant_reading
         ''')
         conn.commit()
@@ -80,4 +79,4 @@ def extract_and_delete_data() -> None:
 
 
 if __name__ == "__main__":
-    print(extract_data())
+    print(extract_and_delete_data())
