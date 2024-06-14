@@ -1,7 +1,9 @@
+# pylint: disable=E1101,R1728
+"""creates a dashboard presenting plant data"""
+import os
 from os import environ as ENV
 from dotenv import load_dotenv
 from boto3 import client
-import os
 import pandas as pd
 import streamlit as st
 import altair as alt
@@ -15,14 +17,14 @@ def get_cursor(connect):
 
 def get_connection():
     """gets a connection"""
-    conn = pymssql.connect(
+    connection = pymssql.connect(
         host=ENV["DB_HOST"],
         port=ENV["DB_PORT"],
         database=ENV["DB_NAME"],
         user=ENV["DB_USER"],
         password=ENV["DB_PASSWORD"]
     )
-    return conn
+    return connection
 
 
 def get_files(bucket_name, s3):
@@ -31,11 +33,13 @@ def get_files(bucket_name, s3):
 
 
 def create_data_folder():
+    """creates a data folder"""
     if not os.path.exists("./data"):
         os.mkdir("./data")
 
 
 def get_most_recent(my_files: list):
+    """finds most recent file"""
     last_modified = max([file["LastModified"]
                         for file in my_files["Contents"]])
     print(last_modified)
@@ -45,6 +49,7 @@ def get_most_recent(my_files: list):
 
 
 def get_bucket_data():
+    """downloads data from bucket"""
     s3 = client('s3', aws_access_key_id=ENV["ACCESS_KEY"],
                 aws_secret_access_key=ENV["SECRET_ACCESS_KEY"])
     create_data_folder()
@@ -57,15 +62,16 @@ def get_bucket_data():
     return df
 
 
-def create_map(readings):
-    st.map(data=readings, latitude="origin_latitude",
+def create_map(data):
+    """creates map of origins"""
+    st.map(data=data, latitude="origin_latitude",
            longitude="origin_longitude", color="#38761d")
 
 
-def create_pie_chart_regions(readings):
+def create_pie_chart_regions(data):
     """creates desired pie chart for regions"""
     st.subheader("Proportion of plants by their origin regions")
-    regions = readings["origin_region"].value_counts(
+    regions = data["origin_region"].value_counts(
         normalize=True).reset_index()
     st.altair_chart(alt.Chart(regions).mark_arc().encode(
         theta="proportion",
@@ -74,10 +80,10 @@ def create_pie_chart_regions(readings):
     ))
 
 
-def create_pie_chart_countries(readings):
+def create_pie_chart_countries(data):
     """creates desired pie chart for countries"""
     st.subheader("Proportion of plants by their origin countries")
-    regions = readings["origin_country_code"].value_counts(
+    regions = data["origin_country_code"].value_counts(
         normalize=True).reset_index()
     st.altair_chart(alt.Chart(regions).mark_arc().encode(
         theta="proportion",
@@ -86,12 +92,12 @@ def create_pie_chart_countries(readings):
     ))
 
 
-def create_latest_readings_bar(latest):
+def create_latest_readings_bar(latest_data):
     """creates bar chart for latest readings for each plant"""
     st.markdown(
         "### Latest soil moisture and temperature readings for each plant")
     st.markdown("Scroll while hovering over the graphs to zoom in and out!")
-    temp = latest[["plant_id", "temperature", "soil_moisture"]]
+    temp = latest_data[["plant_id", "temperature", "soil_moisture"]]
     st.altair_chart(alt.Chart(temp).mark_bar().encode(
         x=alt.X("plant_id:N", title="Plant ID").sort("ascending"),
         y=alt.Y("temperature:Q", title="Temperature"),
@@ -107,6 +113,7 @@ def create_latest_readings_bar(latest):
 
 
 def create_line_graph_temp(data):
+    """create line graph for temp"""
     st.altair_chart(alt.Chart(data).mark_line().encode(
         x=alt.X("taken_at:T", title="Time of reading"),
         y=alt.Y("temperature:Q", title="Temperature"),
@@ -116,14 +123,17 @@ def create_line_graph_temp(data):
 
 
 def create_line_graph_soil(data):
+    """create line graph for soil moisture"""
     st.altair_chart(alt.Chart(data).mark_line().encode(
         x=alt.X("taken_at:T", title="Time of reading"),
         y=alt.Y("soil_moisture:Q", title="Soil moisture"),
-        color=alt.Color("plant_id:N", title="Plant ID", scale=alt.Scale(scheme="darkblue"))).interactive(), use_container_width=True)
+        color=alt.Color("plant_id:N", title="Plant ID", scale=alt.Scale(
+            scheme="darkblue"))).interactive(), use_container_width=True)
 
 
-def filter_history_by_id(history, id: int):
-    return history[history["plant_id"] == id]
+def filter_history_by_id(historical, chosen_plant: int):
+    """get historical data for specified plant"""
+    return historical[historical["plant_id"] == chosen_plant]
 
 
 if __name__ == "__main__":
@@ -133,8 +143,10 @@ if __name__ == "__main__":
     history = get_bucket_data()
 
     st.title("LMNH Plant Monitoring System 🌱")
-    readings = pd.read_sql("""SELECT reading_id, soil_moisture, temperature, last_watered, taken_at, p.plant_id,
-    plant_name, scientific_name, origin_longitude, origin_latitude, origin_town, origin_country_code, origin_region, b.botanist_id, name, email, phone_no
+    readings = pd.read_sql("""SELECT reading_id, soil_moisture, temperature,
+    last_watered, taken_at, p.plant_id,
+    plant_name, scientific_name, origin_longitude, origin_latitude, origin_town, 
+    origin_country_code, origin_region, b.botanist_id, name, email, phone_no
     FROM alpha.fact_plant_reading as pr
     JOIN alpha.dim_botanist as b ON pr.botanist_id = b.botanist_id
     JOIN alpha.dim_plant as p ON p.plant_id = pr.plant_id
@@ -144,13 +156,6 @@ if __name__ == "__main__":
     JOIN alpha.dim_plant as p ON p.plant_id = pr.plant_id
     WHERE taken_at > DATEADD(minute, -1, (SELECT CURRENT_TIMESTAMP))
     ORDER BY plant_id;""", conn)
-    # cursor.execute("""SELECT reading_id, soil_moisture, temperature, last_watered, taken_at, p.plant_id,
-    # plant_name, scientific_name, origin_longitude, origin_latitude, origin_town, origin_country_code, origin_region, b.botanist_id, name, email, phone_no
-    # FROM alpha.fact_plant_reading as pr
-    # JOIN alpha.dim_botanist as b ON pr.botanist_id = b.botanist_id
-    # JOIN alpha.dim_plant as p ON p.plant_id = pr.plant_id""")
-    # data = cursor.fetchall()
-    # reading = Dataframe(data)
     st.markdown("## Latest readings")
     create_latest_readings_bar(latest)
     st.markdown("## Previous readings")
