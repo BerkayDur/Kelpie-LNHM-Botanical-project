@@ -1,3 +1,5 @@
+# pylint: disable=W0212
+
 '''Gets the file from a local repo and writes '''
 
 from os import path
@@ -11,8 +13,7 @@ import botocore.exceptions
 import mypy_boto3_s3.client as s3_client
 
 def get_s3_client(config: dict) -> s3_client:
-    '''Returns an s3 client
-    '''
+    '''Returns an s3 client'''
     access_key = config["ACCESS_KEY"]
     secret_access_key = config['SECRET_ACCESS_KEY']
     return boto3.client(
