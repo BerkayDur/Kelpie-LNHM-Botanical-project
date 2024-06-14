@@ -22,8 +22,10 @@
 ## ✏️ Design
 
 ### 📏 Entity-Relationship diagram
+<img src="./ERD.png" alt="ERD" width="400"/>
 
 ### 📐 Architecture diagram
+<img src="./Data Architecture Image.png" alt="Data Architecture Image" width="400"/>
 
 
 ## ✅ Getting Started
@@ -63,6 +65,17 @@ docker run --env-file .env -t "image: tag"
 ```
 #### **IMPORTANT**
  One thing to note is that the majority of scripts use environment variables. Make sure to create your own .env and fill out all the variables required to run the code successfully.
+
+
+## 🚀 Running the Repository
+
+### 🗂️ Repository Structure
+There are several directories within the repository to keep it organised. Each directory deals with a different part of the project.
+
+- `dashboard` - Contains all the scripts required to run analytics dashboard regarding the plants at the museum.
+- `data_movement` - Contains the script which creates a parquet file of all the readings received from the museum within the last 24 hours.
+- `notify_anomalies`
+
 
 ## 🚨 Help
 <p> Common issues which people face are:</p>
