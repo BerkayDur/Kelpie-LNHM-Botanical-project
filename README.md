@@ -9,7 +9,11 @@ Welcome to Kelpie's project for the Liverpool Natural History Museum's (LMNH) pl
 
 ### Entity-Relationship diagram
 
+<img src="ERD.png" alt="ERD" width="400"/>
+
 ### Architecture diagram
+
+<img src="Data Architecture Image.png" alt="Data Architecture Image" width="400"/>
 
 ## How to run the code
 
