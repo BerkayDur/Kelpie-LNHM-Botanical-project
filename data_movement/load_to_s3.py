@@ -21,15 +21,18 @@ def get_s3_client(config: dict) -> s3_client:
         aws_secret_access_key = secret_access_key
     )
 
+
 def is_s3(client: s3_client) -> bool:
     '''Return true if s3 bucket else return false.'''
     return (isinstance(client, botocore.client.BaseClient)
             and client._service_model.service_name == 's3')
 
+
 def generate_unique_file_name(file_name: str) -> str:
     '''Generate a unique file name based on datetime.now()'''
     splt = file_name.split('.')
     return '.'.join(splt[:-1]) + str(datetime.now()) + '.' + splt[-1]
+
 
 def is_bucket(client: s3_client, bucket_name: str) -> bool:
     '''Return true if bucket_name exists, else false.'''
@@ -58,6 +61,7 @@ def load_to_s3(config: dict) -> None:
     s3 = get_s3_client(config)
     file_name = generate_unique_file_name(config['FILE_NAME'])
     write_file_to_bucket(s3, config['FILE_NAME'], config['BUCKET'], file_name)
+
 
 if __name__ == '__main__':
     load_dotenv()
