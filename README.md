@@ -3,6 +3,8 @@
 
 # 🌱 Liverpool Museum of Natural History's Plant Monitoring System
 
+
+
 ## 🔎 Overview 
 
 ### 📝 Description
@@ -21,17 +23,37 @@
 
 ## ✏️ Design
 
-### 📏 Entity-Relationship diagram
+### 📏 Entity-Relationship Diagram
 <img src="./ERD.png" alt="ERD" width="800"/>
 
-
+This diagram explicitly shows how the data from the readings is stored in the database. We have decided to use a **STAR Schema** for our database due to the requirements of the project. As we only care about the data from the readings and don't worry too much about all the other data, this seemed like a better alternative rather than doing it in a normalised 3NF diagram. This method of schema allows us to quickly extract the reading data from the database and use it which is important when working with EventBridges that trigger every minute.
 
 ### 📐 Architecture diagram
 <img src="./Data Architecture Image.png" alt="Data Architecture Image" width="800"/>
 
+This is a diagram that shows how every different AWS service works and interacts with each other in order to complete the requirements of the system.
+
+- **ETL Pipeline**
+  1. EventBridge which triggers every minute.
+  2. ETL pipeline python script stored in the ECR.
+  3. Lambda function is triggered which runs the script from the ECR and retrieves the data from the API endpoint.
+  4. Stores the readings produced from the Lambda function into the Microsoft SQL Server database.
+
+- **Dashboard**
+  1. ECR contains the python script for the dashboard.
+  2. Fargate task which runs continuously hosting a streamlit dashboard.
+  3. The dashboard reads data from the S3 bucket.
+  4. Stakeholders can view the dashboard online to see data on their plants.
+
+- **Notifying**
+  1. EventBridge which triggers every minute.
+  2. Script that checks for anomalies in data is stored in the ECR.
+  3. Lambda function reads data from the Microsoft SQL Server database to calculate the mean values of the plants and compares the latest readings to see if there are anomalies.
+  4. Upon detecting anomalies, SNS is used to send emails to the gardeners to inform them.
+
 - **Data Movement**
-  1. Eventbridge which triggers daily.
-  2. ECR which contains the python script to extract the daily data
+  1. EventBridge which triggers daily.
+  2. ECR which contains the python script to extract the daily data.
   3. ECS Fargate task that runs the script from the ECR whenever the event bridge is triggered.
   4. Stores the resultant file from the task into the S3 bucket.
 
@@ -72,7 +94,22 @@ docker build -t "image"
 docker run --env-file .env -t "image: tag"
 ```
 #### **IMPORTANT**
- One thing to note is that the majority of scripts use environment variables. Make sure to create your own .env and fill out all the variables required to run the code successfully.
+ One thing to note is that the majority of scripts use environment variables. Make sure to create your own .env/.tfvars and fill out all the variables required to run the code successfully. Below are all the variable names:
+- `ACCESS_KEY`
+- `SECRET_ACCESS_KEY`
+- `CLUSTER_ARN`
+- `DB_PASSWORD`
+- `DB_USER`
+- `DB_NAME`
+- `DB_SCHEMA`
+- `NUM_PLANTS`
+- `API_URL`
+- `ANOMALY_THRESHOLD`
+- `COUNT_TO_BE_ANOMALY`
+- `SNS_ARN`
+- `TIME_FRAME`
+- `BUCKET`
+- `FILE_NAME`
 
 
 ## 🚀 Running the Repository
@@ -85,6 +122,7 @@ There are several directories within the repository to keep it organised. Each d
 - `notify_anomalies` - Contains the script which detects anomalies in the readings from the database and alerts the gardeners when they occur.
 - `pipeline` - Contains all the scripts involved in creating the ETL pipeline for the museum. This results in clean data from the readings being inserted into the database.
 - `schema` - Contains the schema used to create the database which is hosted in the Microsoft SQL Server.
+- `terraform` - Contains the main terraform script used to host the project on the cloud.
 
 ### ☁️ Cloud Resources
 For this project, we have designed it with the intention of hosting everything on the cloud in order to automate it. The python scripts can still be ran locally but the terraform scripts have been included within the repository if you desire to host this system on the cloud as well. The cloud service that has been used is **AWS**.
@@ -97,7 +135,6 @@ The [dashboard](http://18.170.41.129:8501) can be found here which contains summ
 - Line graphs showing the *historical data* for each plant.
 - Pie charts providing analysis on the *origins of plants*.
 - Map showing the *part of the world* where each plant has come from.
-
 
 
 ## 🚨 Help
@@ -124,14 +161,19 @@ The [dashboard](http://18.170.41.129:8501) can be found here which contains summ
 - https://github.com/joe1606
 - https://github.com/Lasped13
 
+
 ## 📚 Version History
 - 1.0
   - Initial release
 
+
 ## © License
+This project is licensed under the alina101, BerkayDur, joe1606, Lasped13 - see the LICENSE.md file for details.
+
 
 ## ❤️ Acknowledgements
 - 🚜 **Gardeners** at the LMNH for taking care of the plants.
 - 🧡 **Sigma Labs** for giving us this project.
 - 🤖 **Sigma Bot** for helping us with the project.
 - 🦕 **LMNH** for promoting agriculture and botany in the UK.
+- 🐠 **Team Kelpie**
