@@ -3,6 +3,8 @@
 
 # 🌱 Liverpool Museum of Natural History's Plant Monitoring System
 
+
+
 ## 🔎 Overview 
 
 ### 📝 Description
@@ -90,7 +92,22 @@ docker build -t "image"
 docker run --env-file .env -t "image: tag"
 ```
 #### **IMPORTANT**
- One thing to note is that the majority of scripts use environment variables. Make sure to create your own .env and fill out all the variables required to run the code successfully.
+ One thing to note is that the majority of scripts use environment variables. Make sure to create your own .env/.tfvars and fill out all the variables required to run the code successfully. Below are all the variable names:
+- `ACCESS_KEY`
+- `SECRET_ACCESS_KEY`
+- `CLUSTER_ARN`
+- `DB_PASSWORD`
+- `DB_USER`
+- `DB_NAME`
+- `DB_SCHEMA`
+- `NUM_PLANTS`
+- `API_URL`
+- `ANOMALY_THRESHOLD`
+- `COUNT_TO_BE_ANOMALY`
+- `SNS_ARN`
+- `TIME_FRAME`
+- `BUCKET`
+- `FILE_NAME`
 
 
 ## 🚀 Running the Repository
@@ -103,6 +120,7 @@ There are several directories within the repository to keep it organised. Each d
 - `notify_anomalies` - Contains the script which detects anomalies in the readings from the database and alerts the gardeners when they occur.
 - `pipeline` - Contains all the scripts involved in creating the ETL pipeline for the museum. This results in clean data from the readings being inserted into the database.
 - `schema` - Contains the schema used to create the database which is hosted in the Microsoft SQL Server.
+- `terraform` - Contains the main terraform script used to host the project on the cloud.
 
 ### ☁️ Cloud Resources
 For this project, we have designed it with the intention of hosting everything on the cloud in order to automate it. The python scripts can still be ran locally but the terraform scripts have been included within the repository if you desire to host this system on the cloud as well. The cloud service that has been used is **AWS**.
@@ -115,7 +133,6 @@ The [dashboard](http://18.170.41.129:8501) can be found here which contains summ
 - Line graphs showing the *historical data* for each plant.
 - Pie charts providing analysis on the *origins of plants*.
 - Map showing the *part of the world* where each plant has come from.
-
 
 
 ## 🚨 Help
@@ -142,12 +159,15 @@ The [dashboard](http://18.170.41.129:8501) can be found here which contains summ
 - https://github.com/joe1606
 - https://github.com/Lasped13
 
+
 ## 📚 Version History
 - 1.0
   - Initial release
 
+
 ## © License
 This project is licensed under the alina101, BerkayDur, joe1606, Lasped13 - see the LICENSE.md file for details.
+
 
 ## ❤️ Acknowledgements
 - 🚜 **Gardeners** at the LMNH for taking care of the plants.
