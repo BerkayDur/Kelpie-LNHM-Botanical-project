@@ -92,7 +92,6 @@ def get_details(reading: dict, detail: str) -> str | int | None:
     return reading.get(detail)
 
 
-
 def identify_datetime_format(date_string: str) -> str:
     """
     Function to match the string date format to get the 
