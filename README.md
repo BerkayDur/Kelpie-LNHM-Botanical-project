@@ -176,3 +176,4 @@ This project is licensed under the alina101, BerkayDur, joe1606, Lasped13 - see 
 - 🧡 **Sigma Labs** for giving us this project.
 - 🤖 **Sigma Bot** for helping us with the project.
 - 🦕 **LMNH** for promoting agriculture and botany in the UK.
+- 🐠 **Team Kelpie**
