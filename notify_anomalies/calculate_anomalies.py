@@ -48,10 +48,10 @@ def query_and_extract_rds(time: str, conn: Connection, cols: list[str]) -> list[
     """This function creates the query to get the data start from time"""
     with conn.cursor() as cur:
         cur.execute(f"""
-SELECT *
-FROM alpha.FACT_plant_reading
-WHERE taken_at >= '{time}';
-""")
+        SELECT *
+        FROM alpha.FACT_plant_reading
+        WHERE taken_at >= '{time}';
+        """)
         data = cur.fetchall()
 
     df = pd.DataFrame(data=data, columns=cols)
@@ -97,9 +97,9 @@ SELECT
     soil_moisture,
     temperature
 FROM RankedData
-WHERE rn <= 3
+WHERE rn <= %s
 ORDER BY plant_id, taken_at DESC;
-""")
+""", (int(ENV['COUNT_TO_BE_ANOMALY'])))
         data = cur.fetchall()
 
     db_conn.close()
@@ -111,23 +111,30 @@ def error_message(soil_anomalies: list[int], temp_anomalies: list[int]) -> str:
     """Function that determines which error message to display"""
     if soil_anomalies and temp_anomalies:
         return f"""Anomalies regarding the soil detected in the following plants:
-{[f"{plant}\n" for plant in soil_anomalies]}
+{[f"{plant}" for plant in soil_anomalies]}
 Anomalies regarding the temperature of the plant detected in the following plants:
-{[f"{plant}\n" for plant in temp_anomalies]}
-"""
+{[f"{plant}" for plant in temp_anomalies]}"""
     if soil_anomalies:
         return f"""Anomalies regarding the soil detected in the following plants:
-{[f"{plant}\n" for plant in soil_anomalies]}"""
+{[f"{plant}" for plant in soil_anomalies]}"""
     if temp_anomalies:
-        return f"""Anomalies regarding the soil detected in the following plants:
-{[f"{plant}\n" for plant in temp_anomalies]}"""
+        return f"""Anomalies regarding the temperature of the plant detected in the following plants:
+{[f"{plant}" for plant in temp_anomalies]}"""
 
     return "No anomalies have been detected!"
 
 
-def check_for_errors(s_mean: list[float], t_mean: list[float], readings: list[tuple], threshold: int) -> str:
+def is_err(reading:list[float], mean:list[float], threshold:int, index: int, reading_id:int) -> bool:
+    '''Determines if a reading is an error'''
+    if not reading[reading_id]:
+        return True
+    if reading[reading_id] > mean[index] + threshold or reading[reading_id] < mean[index] - threshold:
+        return True
+    return False
+
+def check_for_errors(s_mean: list[float], t_mean: list[float], readings: list[tuple], threshold: int, anomaly_count: int) -> str:
     """This function compares the mean value with the values of the recent readings."""
-    grouped_readings = [readings[i:i + 3] for i in range(0, len(readings), 3)]
+    grouped_readings = [readings[i:i + anomaly_count] for i in range(0, len(readings), anomaly_count)]
 
     plants_with_soil_anomalies = []
     plants_with_temp_anomalies = []
@@ -136,19 +143,12 @@ def check_for_errors(s_mean: list[float], t_mean: list[float], readings: list[tu
         s_errors = 0
         t_errors = 0
         for i, reading in enumerate(subgroup):
-            if not reading[1]:
-                s_errors += 1
-            elif reading[1] > s_mean[i] + threshold or reading[1] < s_mean[i] - threshold:
-                s_errors += 1
+            s_errors += is_err(reading, s_mean, threshold, i, 1)
+            t_errors += is_err(reading, t_mean, threshold, i, 2)
 
-            if not reading[2]:
-                t_errors += 1
-            elif reading[2] > t_mean[i] + threshold or reading[2] < t_mean[i] - threshold:
-                t_errors += 1
-
-        if s_errors == 3:
+        if s_errors == anomaly_count:
             plants_with_soil_anomalies.append(subgroup[0][0])
-        if t_errors == 3:
+        if t_errors == anomaly_count:
             plants_with_temp_anomalies.append(subgroup[0][0])
 
     resultant_message = error_message(
@@ -159,7 +159,7 @@ def check_for_errors(s_mean: list[float], t_mean: list[float], readings: list[tu
 
 def calculate_anomalies():
     """Runs all the functions required to execute the purpose of this script."""
-    time_yesterday = get_the_time(DEFAULT_TIME_FRAME_HOURS)
+    time_yesterday = get_the_time(ENV['TIME_FRAME'])
 
     plant_df = get_dataframe(time_yesterday)
 
@@ -168,9 +168,8 @@ def calculate_anomalies():
     recent_readings = get_recent_readings()
 
     threshold_number = int(ENV["ANOMALY_THRESHOLD"])
-
     result = check_for_errors(soil_means, temp_means,
-                              recent_readings, threshold_number)
+                              recent_readings, threshold_number, int(ENV['COUNT_TO_BE_ANOMALY']))
 
     return result
 

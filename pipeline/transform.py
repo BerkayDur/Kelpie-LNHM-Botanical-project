@@ -1,13 +1,32 @@
+# pylint: disable=E0611
+
 """Transform script"""
 from datetime import datetime
 import re
+from os import environ as ENV
 import pandas as pd
+import numpy as np
+from dotenv import load_dotenv
+from pymssql import connect, Connection
+
 
 LATITUDE_INDEX = 0
 LONGITUDE_INDEX = 1
 ORIGIN_TOWN_INDEX = 2
 ORIGIN_COUNTRY_CODE_INDEX = 3
 ORIGIN_REGION_INDEX = 4
+
+
+def get_connection() -> Connection:
+    """Function that creates a connection to the database."""
+    conn = connect(
+        host=ENV["DB_HOST"],
+        port=int(ENV["DB_PORT"]),
+        database=ENV["DB_NAME"],
+        user=ENV["DB_USER"],
+        password=ENV["DB_PASSWORD"]
+    )
+    return conn
 
 
 def get_botanist_detail(reading: dict, botanist_detail: str) -> str | None:
@@ -21,6 +40,7 @@ def get_botanist_detail(reading: dict, botanist_detail: str) -> str | None:
     if 'botanist' in reading:
         return reading['botanist'].get(botanist_detail)
     return None
+
 
 
 def get_origin_detail(reading: dict, index: int) -> str | None:
@@ -100,6 +120,52 @@ def convert_to_datetime(date_string: str) -> None | datetime:
     return date_time_obj
 
 
+def get_recent_readings(plant_id: int) -> list[tuple]:
+    """
+    Function that returns the last 5 readings for each plant id.
+    """
+    db_conn = get_connection()
+
+    with db_conn.cursor() as cur:
+        cur.execute("""
+        WITH RankedData AS (
+            SELECT
+                plant_id,
+                soil_moisture,
+                temperature,
+                taken_at,
+                ROW_NUMBER() OVER (PARTITION BY plant_id ORDER BY taken_at DESC) AS rn
+            FROM alpha.FACT_plant_reading
+        )
+        SELECT
+            plant_id,
+            temperature,
+            taken_at
+        FROM RankedData
+        WHERE rn <= 5 AND plant_id = %s
+        ORDER BY taken_at DESC;
+        """, (plant_id,))
+        return cur.fetchall()
+
+
+def convert_recent_readings_to_dataframe(data: list) -> pd.DataFrame:
+    """
+    Converts the results from SQL query into a dataframe and double
+    checks its sorted by most recent
+    """
+    columns = ['plant_id', 'temperature', 'taken_at']
+    df = pd.DataFrame(data, columns=columns)
+    df = df.sort_values(by='taken_at', ascending=False)
+    return df
+
+
+def calculate_average(readings: list[int]) -> int:
+    """
+    Calculates the average of 4 previous readings
+    """
+    return sum(readings) / len(readings)
+
+
 def botanist_details(reading: dict) -> dict:
     """
     Returns a dataframe of botanist details
@@ -128,20 +194,40 @@ def plant_details(reading: dict) -> dict:
             'origin_region': get_origin_region(reading)}
 
 
+def check_valid_temperature(plant_id: int, latest_temp: int) -> int:
+    """
+    Function to check if the most recent reading is valid. If not, it will
+    return previous reading
+    """
+    try:
+        recent_readings = get_recent_readings(plant_id)
+        readings_df = convert_recent_readings_to_dataframe(recent_readings)
+        readings_dictionary = readings_df.to_dict('records') #returns a list of dictionaries
+        temperatures = [reading['temperature'] for reading in readings_dictionary]
+        if latest_temp > calculate_average(temperatures) + 40:
+            return temperatures[0]
+        return latest_temp
+    except Exception:  # pylint: disable=W0718
+        return None
+
+
 def plant_readings(reading: dict) -> dict:
     """
     Returns a dataframe of reading details
     """
+    plant_id = get_details(reading, 'plant_id')
+    temperature = get_details(reading, 'temperature')
     if not isinstance(reading, dict):
         raise TypeError('entries into a DataFrame must be of type dict')
     return {
-            'soil_moisture': get_details(reading, 'soil_moisture'),
-            'temperature': get_details(reading, 'temperature'),
+            'soil_moisture': check_soil_moisture(get_details(reading, 'soil_moisture')),
+            'temperature': check_valid_temperature(plant_id, temperature),
             'last_watered': convert_to_datetime(get_details(reading, 'last_watered')),
             'recording_taken': convert_to_datetime(get_details(reading, 'recording_taken')),
-            'name': get_botanist_detail(reading, 'name'),
-            'plant_name': get_details(reading, 'name')
+            'plant_id': plant_id,
+            'name': get_botanist_detail(reading, 'name')
         }
+
 
 
 def group_data(readings: list[dict]) -> tuple[list, list, list]:
@@ -177,11 +263,21 @@ def convert_to_dataframe(readings: list[dict]) -> pd.DataFrame:
     return pd.DataFrame(readings)
 
 
-def clean_data(df: pd.DataFrame, threshold: int = 2) -> pd.DataFrame:
+def check_soil_moisture(moisture: int) -> int | None:
+    """
+    Checks if soil moisture is below 0, which would be invalid
+    """
+    if not moisture or moisture < 0:
+        return None
+    return moisture
+
+
+def remove_nan(df: pd.DataFrame, threshold: int = 2) -> pd.DataFrame:
     """
     Drops all 
     """
     df = df.dropna(thresh=threshold)
+    df = df.replace(np.nan, None)
     return df
 
 
@@ -189,10 +285,16 @@ def transform_data(readings: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame, pd
     """
     Main
     """
+    load_dotenv()
+
     plant, botanist, plant_reading = group_data(readings)
 
-    dim_plant = convert_to_dataframe(plant)
-    dim_botanist = convert_to_dataframe(botanist)
-    fact_plant_reading = convert_to_dataframe(plant_reading)
+    plant_table = remove_nan(convert_to_dataframe(plant))
+    botanist_table = remove_nan(convert_to_dataframe(botanist))
+    reading_table = remove_nan(convert_to_dataframe(plant_reading))
 
-    return clean_data(dim_plant), clean_data(dim_botanist), clean_data(fact_plant_reading)
+    return {
+            "dim_plant": plant_table, 
+            "dim_botanist": botanist_table, 
+            "fact_plant_reading": reading_table
+            }
