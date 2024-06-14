@@ -24,8 +24,16 @@
 ### 📏 Entity-Relationship diagram
 <img src="./ERD.png" alt="ERD" width="400"/>
 
+
+
 ### 📐 Architecture diagram
 <img src="./Data Architecture Image.png" alt="Data Architecture Image" width="400"/>
+
+- **Data Movement**
+  1. Eventbridge which triggers daily.
+  2. ECR which contains the python script to extract the daily data
+  3. ECS Fargate task that runs the script from the ECR whenever the event bridge is triggered.
+  4. Stores the resultant file from the task into the S3 bucket.
 
 
 ## ✅ Getting Started
@@ -74,7 +82,22 @@ There are several directories within the repository to keep it organised. Each d
 
 - `dashboard` - Contains all the scripts required to run analytics dashboard regarding the plants at the museum.
 - `data_movement` - Contains the script which creates a parquet file of all the readings received from the museum within the last 24 hours.
-- `notify_anomalies`
+- `notify_anomalies` - Contains the script which detects anomalies in the readings from the database and alerts the gardeners when they occur.
+- `pipeline` - Contains all the scripts involved in creating the ETL pipeline for the museum. This results in clean data from the readings being inserted into the database.
+- `schema` - Contains the schema used to create the database which is hosted in the Microsoft SQL Server.
+
+### ☁️ Cloud Resources
+For this project, we have designed it with the intention of hosting everything on the cloud in order to automate it. The python scripts can still be ran locally but the terraform scripts have been included within the repository if you desire to host this system on the cloud as well. The cloud service that has been used is **AWS**.
+
+### 📊 Dashboard
+
+The [dashboard](http://18.170.41.129:8501) can be found here which contains summaries and findings on the readings provided by the museum. Below is the information provided by the dashboard:
+- *Latest temperature and soil moisture readings* for each plant shown as bar charts.
+- Line graphs showing *recent changes* in readings for each plant.
+- Line graphs showing the *historical data* for each plant.
+- Pie charts providing analysis on the *origins of plants*.
+- Map showing the *part of the world* where each plant has come from.
+
 
 
 ## 🚨 Help
@@ -101,10 +124,14 @@ There are several directories within the repository to keep it organised. Each d
 - https://github.com/joe1606
 - https://github.com/Lasped13
 
-## Version History
+## 📚 Version History
 - 1.0
   - Initial release
 
-## ™️ License
+## © License
 
-## Acknowledgements
+## ❤️ Acknowledgements
+- 🚜 **Gardeners** at the LMNH for taking care of the plants.
+- 🧡 **Sigma Labs** for giving us this project.
+- 🤖 **Sigma Bot** for helping us with the project.
+- 🦕 **LMNH** for promoting agriculture and botany in the UK.
