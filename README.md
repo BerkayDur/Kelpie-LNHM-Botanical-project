@@ -31,6 +31,8 @@ This diagram explicitly shows how the data from the readings is stored in the da
 ### 📐 Architecture diagram
 <img src="./Data Architecture Image.png" alt="Data Architecture Image" width="800"/>
 
+This is a diagram that shows how every different AWS service works and interacts with each other in order to complete the requirements of the system.
+
 - **ETL Pipeline**
   1. EventBridge which triggers every minute.
   2. ETL pipeline python script stored in the ECR.
