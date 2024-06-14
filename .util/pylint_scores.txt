@@ -1,8 +1,6 @@
-************* Module sns_alert
-notify_anomalies/sns_alert.py:5:0: E0401: Unable to import 'boto3' (import-error)
 
------------------------------------
-Your code has been rated at 6.15/10
+------------------------------------
+Your code has been rated at 10.00/10
 
 
 ------------------------------------
