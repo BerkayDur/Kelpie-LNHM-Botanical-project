@@ -10,7 +10,7 @@ def get_sns_client(config: dict) -> object:
     secret_access_key = config['SECRET_ACCESS_KEY']
     return boto3.client(
         'sns',
-        region_name=config['AWS_REGION'],
+        region_name='eu-west-2',
         aws_access_key_id=access_key,
         aws_secret_access_key=secret_access_key
     )
