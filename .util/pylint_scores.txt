@@ -1,3 +1,21 @@
+************* Module main
+notify_anomalies/main.py:22:0: C0303: Trailing whitespace (trailing-whitespace)
+notify_anomalies/main.py:27:0: C0304: Final newline missing (missing-final-newline)
+notify_anomalies/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+notify_anomalies/main.py:11:8: W0621: Redefining name 'message' from outer scope (line 25) (redefined-outer-name)
+notify_anomalies/main.py:17:11: W0718: Catching too general exception Exception (broad-exception-caught)
+notify_anomalies/main.py:7:12: W0613: Unused argument 'event' (unused-argument)
+notify_anomalies/main.py:7:26: W0613: Unused argument 'context' (unused-argument)
+
+-----------------------------------
+Your code has been rated at 6.11/10
+
+************* Module sns_alert
+notify_anomalies/sns_alert.py:5:0: E0401: Unable to import 'boto3' (import-error)
+
+-----------------------------------
+Your code has been rated at 6.15/10
+
 
 ------------------------------------
 Your code has been rated at 10.00/10
