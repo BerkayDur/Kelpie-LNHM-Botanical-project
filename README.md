@@ -21,17 +21,35 @@
 
 ## ✏️ Design
 
-### 📏 Entity-Relationship diagram
+### 📏 Entity-Relationship Diagram
 <img src="./ERD.png" alt="ERD" width="800"/>
 
-
+This diagram explicitly shows how the data from the readings is stored in the database. We have decided to use a **STAR Schema** for our database due to the requirements of the project. As we only care about the data from the readings and don't worry too much about all the other data, this seemed like a better alternative rather than doing it in a normalised 3NF diagram. This method of schema allows us to quickly extract the reading data from the database and use it which is important when working with EventBridges that trigger every minute.
 
 ### 📐 Architecture diagram
 <img src="./Data Architecture Image.png" alt="Data Architecture Image" width="800"/>
 
+- **ETL Pipeline**
+  1. EventBridge which triggers every minute.
+  2. ETL pipeline python script stored in the ECR.
+  3. Lambda function is triggered which runs the script from the ECR and retrieves the data from the API endpoint.
+  4. Stores the readings produced from the Lambda function into the Microsoft SQL Server database.
+
+- **Dashboard**
+  1. ECR contains the python script for the dashboard.
+  2. Fargate task which runs continuously hosting a streamlit dashboard.
+  3. The dashboard reads data from the S3 bucket.
+  4. Stakeholders can view the dashboard online to see data on their plants.
+
+- **Notifying**
+  1. EventBridge which triggers every minute.
+  2. Script that checks for anomalies in data is stored in the ECR.
+  3. Lambda function reads data from the Microsoft SQL Server database to calculate the mean values of the plants and compares the latest readings to see if there are anomalies.
+  4. Upon detecting anomalies, SNS is used to send emails to the gardeners to inform them.
+
 - **Data Movement**
-  1. Eventbridge which triggers daily.
-  2. ECR which contains the python script to extract the daily data
+  1. EventBridge which triggers daily.
+  2. ECR which contains the python script to extract the daily data.
   3. ECS Fargate task that runs the script from the ECR whenever the event bridge is triggered.
   4. Stores the resultant file from the task into the S3 bucket.
 
@@ -129,6 +147,7 @@ The [dashboard](http://18.170.41.129:8501) can be found here which contains summ
   - Initial release
 
 ## © License
+This project is licensed under the alina101, BerkayDur, joe1606, Lasped13 - see the LICENSE.md file for details.
 
 ## ❤️ Acknowledgements
 - 🚜 **Gardeners** at the LMNH for taking care of the plants.
