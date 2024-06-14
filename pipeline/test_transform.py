@@ -4,7 +4,6 @@ import datetime
 import pandas as pd
 from pandas.testing import assert_frame_equal
 from unittest.mock import patch, MagicMock
-from unittest import mock
 
 @pytest.fixture
 def example_valid_data():
