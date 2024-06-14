@@ -1,8 +1,6 @@
-************* Module calculate_anomalies
-notify_anomalies/calculate_anomalies.py:129:15: W1309: Using an f-string that does not have any interpolated variables (f-string-without-interpolation)
 
------------------------------------
-Your code has been rated at 9.86/10
+------------------------------------
+Your code has been rated at 10.00/10
 
 
 ------------------------------------
