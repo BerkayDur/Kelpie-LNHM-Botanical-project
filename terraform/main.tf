@@ -225,6 +225,25 @@ resource "aws_ecs_task_definition" "dashboard_task_def" {
 resource "aws_security_group" "dashboard_allow_all_sg" {
     name="c11-kelpie-dashboard-allow-all-sg"
     description="Security group to allow all HTTP inbound and outbound traffice"
+    vpc_id = data.aws_vpc.c11-VPC.id
+
+    tags = {
+        Name="allow all"
+    }
+
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
 }
 
 resource "aws_ecs_service" "dashboard_service" {
@@ -235,7 +254,7 @@ resource "aws_ecs_service" "dashboard_service" {
     launch_type = "FARGATE"
     network_configuration {
       subnets = ["subnet-07de213eeae1f6307","subnet-0e6c6a8f959dae31a","subnet-08781450402b81aa2"]
-      security_groups = ["sg-0197b209ab4187997"]    # Create this security group in terraform.
+      security_groups = [aws_security_group.dashboard_allow_all_sg.id]
       assign_public_ip = true
     }
 }
