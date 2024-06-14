@@ -1,8 +1,9 @@
-from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data, convert_to_dataframe, transform_data, remove_nan, convert_to_datetime, identify_datetime_format
+from transform import get_botanist_detail, get_origin_detail, get_scientific_name, get_origin_region, get_details, botanist_details, plant_details, plant_readings, group_data, convert_to_dataframe, transform_data, remove_nan, convert_to_datetime, identify_datetime_format, get_recent_readings, convert_recent_readings_to_dataframe, check_valid_temperature, calculate_average
 import pytest
 import datetime
 import pandas as pd
-from unittest.mock import patch
+from pandas.testing import assert_frame_equal
+from unittest.mock import patch, MagicMock
 
 @pytest.fixture
 def example_valid_data():
@@ -339,3 +340,97 @@ def test_clean_data():
     cleaned_df = remove_nan(df_with_nan, threshold=2)
 
     assert cleaned_df.equals(df_cleaned_expected)
+
+@patch('transform.get_connection')
+def test_get_recent_readings(mock_get_connection):
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_get_connection.return_value = mock_conn
+    mock_conn.cursor.return_value.__enter__.return_value = mock_cursor
+    
+    mock_cursor.fetchall.return_value = [
+    (5, 11.21525956953343, datetime.datetime(2024, 6, 14, 8, 44, 45)),
+    (5, 11.21317333513321, datetime.datetime(2024, 6, 14, 8, 43, 47)),
+    (5, 11.21108338997407, datetime.datetime(2024, 6, 14, 8, 42, 48)),
+    (5, 11.208956845145721, datetime.datetime(2024, 6, 14, 8, 41, 47)),
+    (5, 11.206899164863932, datetime.datetime(2024, 6, 14, 8, 40, 47))
+    ]
+
+    expected_result = [
+    (5, 11.21525956953343, datetime.datetime(2024, 6, 14, 8, 44, 45)),
+    (5, 11.21317333513321, datetime.datetime(2024, 6, 14, 8, 43, 47)),
+    (5, 11.21108338997407, datetime.datetime(2024, 6, 14, 8, 42, 48)),
+    (5, 11.208956845145721, datetime.datetime(2024, 6, 14, 8, 41, 47)),
+    (5, 11.206899164863932, datetime.datetime(2024, 6, 14, 8, 40, 47))
+    ]
+    assert get_recent_readings(5) == expected_result
+
+
+def test_convert_recent_readings_to_dataframe():
+    data = [
+    (5, 11.21525956953343, datetime.datetime(2024, 6, 14, 8, 44, 45)),
+    (5, 11.21317333513321, datetime.datetime(2024, 6, 14, 8, 43, 47)),
+    (5, 11.21108338997407, datetime.datetime(2024, 6, 14, 8, 42, 48)),
+    (5, 11.208956845145721, datetime.datetime(2024, 6, 14, 8, 41, 47)),
+    (5, 11.206899164863932, datetime.datetime(2024, 6, 14, 8, 40, 47))
+    ]
+    expected_data = [
+    (5, 11.21525956953343, datetime.datetime(2024, 6, 14, 8, 44, 45)),
+    (5, 11.21317333513321, datetime.datetime(2024, 6, 14, 8, 43, 47)),
+    (5, 11.21108338997407, datetime.datetime(2024, 6, 14, 8, 42, 48)),
+    (5, 11.208956845145721, datetime.datetime(2024, 6, 14, 8, 41, 47)),
+    (5, 11.206899164863932, datetime.datetime(2024, 6, 14, 8, 40, 47))
+    ]
+
+    expected_df = pd.DataFrame(expected_data, columns=[
+                               'plant_id', 'temperature', 'taken_at'])
+
+    result_df = convert_recent_readings_to_dataframe(data)
+
+    assert_frame_equal(result_df, expected_df)
+
+
+def test_calculate_average_5_readings():
+    readings = [10, 20, 30, 40, 50]
+    assert calculate_average(readings) == (20 + 30 + 40 + 50) / 4
+
+
+
+def test_calculate_average_1_reading():
+    readings = [10]
+    assert calculate_average(readings) == 10
+
+@patch('transform.get_recent_readings')
+def test_check_valid_temperature(mock_get_recent_readings):
+    mock_get_recent_readings.return_value = [(5, 11.178765665089117, datetime.datetime(2024, 6, 14, 9, 23, 54)), (5, 11.177404723734615, datetime.datetime(2024, 6, 14, 9, 22, 59)), (5, 11.175809629029626, datetime.datetime(
+        2024, 6, 14, 9, 21, 53)), (5, 11.17448877843804, datetime.datetime(2024, 6, 14, 9, 20, 57)), (5, 11.173061304556681, datetime.datetime(2024, 6, 14, 9, 19, 55))]
+
+    assert check_valid_temperature(5) == 11.178765665089117
+
+
+@patch('transform.get_recent_readings')
+def test_check_invalid_temperature(mock_get_recent_readings):
+    mock_get_recent_readings.return_value = [(5, 91.178765665089117, datetime.datetime(2024, 6, 14, 9, 23, 54)), (5, 11.177404723734615, datetime.datetime(2024, 6, 14, 9, 22, 59)), (5, 11.175809629029626, datetime.datetime(
+        2024, 6, 14, 9, 21, 53)), (5, 11.17448877843804, datetime.datetime(2024, 6, 14, 9, 20, 57)), (5, 11.173061304556681, datetime.datetime(2024, 6, 14, 9, 19, 55))]
+
+    assert check_valid_temperature(5) == 11.177404723734615
+
+
+@patch('transform.get_recent_readings')
+def test_check_valid_temperature_3_readings(mock_get_recent_readings):
+    mock_get_recent_readings.return_value = [
+        (5, 11.175809629029626, datetime.datetime(2024, 6, 14, 9, 21, 53)), 
+        (5, 11.17448877843804, datetime.datetime(2024, 6, 14, 9, 20, 57)), 
+        (5, 11.173061304556681, datetime.datetime(2024, 6, 14, 9, 19, 55))]
+
+    assert check_valid_temperature(5) == 11.175809629029626
+
+
+@patch('transform.get_recent_readings')
+def test_check_invalid_temperature_3_readings(mock_get_recent_readings):
+    mock_get_recent_readings.return_value = [
+        (5, 111.175809629029626, datetime.datetime(2024, 6, 14, 9, 21, 53)),
+        (5, 11.17448877843804, datetime.datetime(2024, 6, 14, 9, 20, 57)),
+        (5, 11.173061304556681, datetime.datetime(2024, 6, 14, 9, 19, 55))]
+
+    assert check_valid_temperature(5) == 11.17448877843804
