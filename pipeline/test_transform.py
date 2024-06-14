@@ -4,6 +4,7 @@ import datetime
 import pandas as pd
 from pandas.testing import assert_frame_equal
 from unittest.mock import patch, MagicMock
+from unittest import mock
 
 @pytest.fixture
 def example_valid_data():
@@ -246,6 +247,7 @@ def test_group_data_invalid_type_contents():
     with pytest.raises(TypeError):
         plant_readings([1, 2, 4])
 
+
 def test_plant_details(example_valid_data):
     assert plant_details(example_valid_data) == {
         'plant_id': 8,
@@ -273,7 +275,9 @@ def test_plant_details_missing(example_invalid_data):
         }
 
 
-def test_plant_readings(example_valid_data):
+@patch('transform.check_valid_temperature')
+def test_plant_readings(mock_check_valid_temperature, example_valid_data):
+    mock_check_valid_temperature.return_value = 11.483367104821191
     assert plant_readings(example_valid_data) == {'soil_moisture': 15.478956774353875, 'temperature': 11.483367104821191, 'last_watered': datetime.datetime(
             2024, 6, 10, 13, 23, 1), 'recording_taken': datetime.datetime(2024, 6, 11, 13, 0, 9), 'plant_id': 8, 'name': 'Eliza Andrews'}
         
@@ -283,8 +287,9 @@ def test_plant_readings_missing_details(example_invalid_data):
     assert plant_readings(example_invalid_data) == {
         'soil_moisture': None, 'temperature': None, 'last_watered': None, 'recording_taken': None, 'plant_id': 7, 'name': None}
 
-
-def test_group_data(example_valid_data, example_expected_output):
+@patch('transform.check_valid_temperature')
+def test_group_data(mock_check_valid_temperature, example_valid_data, example_expected_output):
+   mock_check_valid_temperature.return_value = 11.483367104821191
    assert group_data([example_valid_data]) == example_expected_output
 
 
@@ -392,7 +397,7 @@ def test_convert_recent_readings_to_dataframe():
 
 def test_calculate_average_5_readings():
     readings = [10, 20, 30, 40, 50]
-    assert calculate_average(readings) == (20 + 30 + 40 + 50) / 4
+    assert calculate_average(readings) == (10 + 20 + 30 + 40 + 50) / 5
 
 
 
@@ -400,20 +405,21 @@ def test_calculate_average_1_reading():
     readings = [10]
     assert calculate_average(readings) == 10
 
+
 @patch('transform.get_recent_readings')
 def test_check_valid_temperature(mock_get_recent_readings):
     mock_get_recent_readings.return_value = [(5, 11.178765665089117, datetime.datetime(2024, 6, 14, 9, 23, 54)), (5, 11.177404723734615, datetime.datetime(2024, 6, 14, 9, 22, 59)), (5, 11.175809629029626, datetime.datetime(
         2024, 6, 14, 9, 21, 53)), (5, 11.17448877843804, datetime.datetime(2024, 6, 14, 9, 20, 57)), (5, 11.173061304556681, datetime.datetime(2024, 6, 14, 9, 19, 55))]
 
-    assert check_valid_temperature(5) == 11.178765665089117
+    assert check_valid_temperature(5, 12) == 12
 
 
 @patch('transform.get_recent_readings')
 def test_check_invalid_temperature(mock_get_recent_readings):
-    mock_get_recent_readings.return_value = [(5, 91.178765665089117, datetime.datetime(2024, 6, 14, 9, 23, 54)), (5, 11.177404723734615, datetime.datetime(2024, 6, 14, 9, 22, 59)), (5, 11.175809629029626, datetime.datetime(
+    mock_get_recent_readings.return_value = [(5, 11.177404723734615, datetime.datetime(2024, 6, 14, 9, 23, 54)), (5, 11.177404723734615, datetime.datetime(2024, 6, 14, 9, 22, 59)), (5, 11.175809629029626, datetime.datetime(
         2024, 6, 14, 9, 21, 53)), (5, 11.17448877843804, datetime.datetime(2024, 6, 14, 9, 20, 57)), (5, 11.173061304556681, datetime.datetime(2024, 6, 14, 9, 19, 55))]
 
-    assert check_valid_temperature(5) == 11.177404723734615
+    assert check_valid_temperature(5, 100) == 11.177404723734615
 
 
 @patch('transform.get_recent_readings')
@@ -423,14 +429,16 @@ def test_check_valid_temperature_3_readings(mock_get_recent_readings):
         (5, 11.17448877843804, datetime.datetime(2024, 6, 14, 9, 20, 57)), 
         (5, 11.173061304556681, datetime.datetime(2024, 6, 14, 9, 19, 55))]
 
-    assert check_valid_temperature(5) == 11.175809629029626
+    assert check_valid_temperature(5, 12) == 12
 
 
 @patch('transform.get_recent_readings')
 def test_check_invalid_temperature_3_readings(mock_get_recent_readings):
     mock_get_recent_readings.return_value = [
-        (5, 111.175809629029626, datetime.datetime(2024, 6, 14, 9, 21, 53)),
+        (5, 11.52398453720574, datetime.datetime(2024, 6, 14, 9, 21, 53)),
         (5, 11.17448877843804, datetime.datetime(2024, 6, 14, 9, 20, 57)),
         (5, 11.173061304556681, datetime.datetime(2024, 6, 14, 9, 19, 55))]
 
-    assert check_valid_temperature(5) == 11.17448877843804
+    assert check_valid_temperature(5, 90) == 11.52398453720574
+
+

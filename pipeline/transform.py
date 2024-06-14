@@ -163,8 +163,6 @@ def calculate_average(readings: list[int]) -> int:
     """
     Calculates the average of 4 previous readings
     """
-    if len(readings) == 5:
-        return sum(readings[1:]) / 4
     return sum(readings) / len(readings)
 
 
@@ -196,7 +194,7 @@ def plant_details(reading: dict) -> dict:
             'origin_region': get_origin_region(reading)}
 
 
-def check_valid_temperature(plant_id: int) -> int:
+def check_valid_temperature(plant_id: int, latest_temp: int) -> int:
     """
     Function to check if the most recent reading is valid. If not, it will
     return previous reading
@@ -206,9 +204,9 @@ def check_valid_temperature(plant_id: int) -> int:
         readings_df = convert_recent_readings_to_dataframe(recent_readings)
         readings_dictionary = readings_df.to_dict('records') #returns a list of dictionaries
         temperatures = [reading['temperature'] for reading in readings_dictionary]
-        if temperatures[0] > calculate_average(temperatures) + 40:
-            return temperatures[1]
-        return temperatures[0]
+        if latest_temp > calculate_average(temperatures) + 40:
+            return temperatures[0]
+        return latest_temp
     except Exception:  # pylint: disable=W0718
         return None
 
@@ -217,14 +215,16 @@ def plant_readings(reading: dict) -> dict:
     """
     Returns a dataframe of reading details
     """
+    plant_id = get_details(reading, 'plant_id')
+    temperature = get_details(reading, 'temperature')
     if not isinstance(reading, dict):
         raise TypeError('entries into a DataFrame must be of type dict')
     return {
             'soil_moisture': check_soil_moisture(get_details(reading, 'soil_moisture')),
-            'temperature': get_details(reading, 'temperature'),
+            'temperature': check_valid_temperature(plant_id, temperature),
             'last_watered': convert_to_datetime(get_details(reading, 'last_watered')),
             'recording_taken': convert_to_datetime(get_details(reading, 'recording_taken')),
-            'plant_id': get_details(reading, 'plant_id'),
+            'plant_id': plant_id,
             'name': get_botanist_detail(reading, 'name')
         }
 
