@@ -8,8 +8,10 @@ data
 .env
 
 
-.terraform
-.tfvars
+.terraform*
+*.tfvars
+*.tfstate*
+variables.tf
 
 __pycache__
 .pytest_cache
