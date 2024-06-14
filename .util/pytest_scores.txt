@@ -1,13 +1,13 @@
 ============================= test session starts ==============================
 platform linux -- Python 3.12.3, pytest-8.2.2, pluggy-1.5.0
 rootdir: /home/runner/work/Kelpie-LNHM-Botanical-project/Kelpie-LNHM-Botanical-project
-collected 91 items
+collected 101 items
 
-data_movement/test_extract_from_db.py ...............                    [ 16%]
-data_movement/test_load_to_s3.py ...............                         [ 32%]
-pipeline/test_extract.py .......                                         [ 40%]
-pipeline/test_load.py .                                                  [ 41%]
-pipeline/test_transform.py ............................................. [ 91%]
+data_movement/test_extract_from_db.py ...............                    [ 14%]
+data_movement/test_load_to_s3.py ...............                         [ 29%]
+notify_anomalies/test_calculate_anomalies.py ..........                  [ 39%]
+pipeline/test_extract.py .......                                         [ 46%]
+pipeline/test_load.py .                                                  [ 47%]
+pipeline/test_transform.py ............................................. [ 92%]
 ........                                                                 [100%]
 
-============================== 91 passed in 0.92s ==============================
