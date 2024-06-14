@@ -1,4 +1,9 @@
 pytest
 pylint
-boto3
+requests
+pandas
 python-dotenv
+pymssql
+logging
+lambda_multiprocessing
+numpy

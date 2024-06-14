@@ -1,2 +1,8 @@
-pytest
 pylint
+pytest
+python-dotenv
+pyarrow
+pandas
+boto3-stubs[s3]
+mypy-boto3
+pymssql

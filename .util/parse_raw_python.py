@@ -29,14 +29,27 @@ def get_total_number_of_failed_tests(content: str) -> int:
     for pytest tests.'''
     if 'no tests ran' in content:
         return 0
-    return int(re.findall(r'\d+(?= failed)', content)[0])
+    try:
+        return int(re.findall(r'\d+(?= failed)', content)[0])
+    except IndexError:
+        return 0
 
 def get_total_number_of_passed_tests(content: str) -> int:
     '''Calculate the number of failed tests in contents. This works specifically
     for pytest tests.'''
     if 'no tests ran' in content:
         return 0
-    return int(re.findall(r'\d+(?= passed)', content)[0])
+    try:
+        return int(re.findall(r'\d+(?= passed)', content)[0])
+    except IndexError:
+        return 0
+
+def get_avg_pylint_scores(content: str) -> list[float]:
+    '''Get the average pylint scores across all the tests completed.'''
+    matches = re.findall(r'(?<=Your code has been rated at )\d+\.?\d+(?=/10)', content)
+    if len(matches) == 0:
+        return [0.0]
+    return [float(match) for match in matches]
 
 
 def calculate_avg_percentage_of_passed_tests(passed_tests: int, total_tests: int) -> int:
@@ -44,6 +57,10 @@ def calculate_avg_percentage_of_passed_tests(passed_tests: int, total_tests: int
     if passed_tests == 0:
         return 0
     return int(100 * passed_tests / total_tests)
+
+def calculate_avg_pylint_score(pylint_scores: list[float]) -> float:
+    '''Calculate the mean pylint score across all the pylint tests.'''
+    return sum(pylint_scores) / len(pylint_scores)
 
 def create_dict_of_pytest_scores(passed_tests: int,
                                  failed_tests: int,
@@ -55,6 +72,12 @@ def create_dict_of_pytest_scores(passed_tests: int,
         'failed': failed_tests,
         'total': total_tests,
         'passed_percentage': percentage_of_passing_tests
+    }
+
+def create_dict_of_pylint_scores(avg_score: float) -> dict:
+    '''Create dictionary of pylint scores given the average score.'''
+    return {
+        'avg_score': avg_score
     }
 
 def create_json(scores: dict, write_file: str) -> None:
@@ -72,4 +95,9 @@ if __name__ == "__main__":
         total = FAILED + PASSED
         PERCENTAGE_PASSED = calculate_avg_percentage_of_passed_tests(PASSED, total)
         score = create_dict_of_pytest_scores(PASSED, FAILED, total, PERCENTAGE_PASSED)
+        create_json(score, args.output)
+    elif args.type == 'pylint':
+        AVG_PYLINT_SCORES = get_avg_pylint_scores(file_content)
+        AVG_PYLINT_SCORE = calculate_avg_pylint_score(AVG_PYLINT_SCORES)
+        score = create_dict_of_pylint_scores(AVG_PYLINT_SCORE)
         create_json(score, args.output)
